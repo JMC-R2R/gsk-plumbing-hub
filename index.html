@@ -984,13 +984,40 @@ function expandTabs(){
   if (ME.kind !== 'internal' && allMonths.length > 3) {
     const sorted = ITEMS.slice().sort((a, b) =>
       String(a.month_key).localeCompare(String(b.month_key)));
-    const open = sorted.find(r => !r.approved);
-    const batch = open && open.plan_batch_id;
-    const inBatch = batch
-      ? [...new Set(sorted.filter(r => r.plan_batch_id === batch)
+    /* The EARLIEST plan batch that still holds something unapproved, by its own
+       first month. Not the batch of the earliest unapproved item: rows that
+       predate plan_batch_id have none, and on Unleash those legacy rows start
+       in August and left the anchor null. Not the union of every open batch
+       either, because next quarter is generated in full and unapproved, so a
+       union turns three tabs into six. One batch, the one they are up to. */
+    const minMonth = {}, hasOpen = {};
+    for (const r of sorted) {
+      if (!r.plan_batch_id) continue;
+      const b = r.plan_batch_id;
+      if (!(b in minMonth) || String(r.month_key) < minMonth[b]) minMonth[b] = String(r.month_key);
+      if (!r.approved) hasOpen[b] = true;
+    }
+    const openBatches = Object.keys(hasOpen).sort((a, b) =>
+      minMonth[a].localeCompare(minMonth[b]));
+    const anchor = openBatches[0];
+    /* Months of the anchor batch. Items are picked per month tab, so another
+       batch sitting inside that window still renders: GSK's GBP batch is
+       Oct-Nov inside a Sep-Nov blog batch, and both show. */
+    const inBatch = anchor
+      ? [...new Set(sorted.filter(r => r.plan_batch_id === anchor)
                           .map(r => r.month_key))].sort()
       : [];
-    months = inBatch.length ? inBatch : allMonths.slice(-3);
+    if (inBatch.length) {
+      months = inBatch;
+    } else {
+      /* Nothing batched is open. The LAST three months are the wrong fallback:
+         they are next quarter, which hides the months the client is actually
+         being asked to approve. Count forward from the earliest open month. */
+      const open = sorted.find(r => !r.approved);
+      months = open
+        ? allMonths.filter(m => m >= open.month_key).slice(0, 3)
+        : allMonths.slice(-3);
+    }
   }
   const out = [];
   for (const t of CFG.tabs) {
