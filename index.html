@@ -986,10 +986,11 @@ function expandTabs(){
       String(a.month_key).localeCompare(String(b.month_key)));
     /* The EARLIEST plan batch that still holds something unapproved, by its own
        first month. Not the batch of the earliest unapproved item: rows that
-       predate plan_batch_id have none, and on Unleash those legacy rows start
-       in August and left the anchor null. Not the union of every open batch
-       either, because next quarter is generated in full and unapproved, so a
-       union turns three tabs into six. One batch, the one they are up to. */
+       predate plan_batch_id carry none, and on some clients those legacy rows
+       start before the current quarter and leave the anchor null. Not the union
+       of every open batch either, because next quarter is generated in full and
+       unapproved, so a union turns three tabs into six. One batch, the one they
+       are up to. */
     const minMonth = {}, hasOpen = {};
     for (const r of sorted) {
       if (!r.plan_batch_id) continue;
@@ -1000,9 +1001,9 @@ function expandTabs(){
     const openBatches = Object.keys(hasOpen).sort((a, b) =>
       minMonth[a].localeCompare(minMonth[b]));
     const anchor = openBatches[0];
-    /* Months of the anchor batch. Items are picked per month tab, so another
-       batch sitting inside that window still renders: GSK's GBP batch is
-       Oct-Nov inside a Sep-Nov blog batch, and both show. */
+    /* Months of the anchor batch. Items are picked per month tab, so a second
+       batch sitting inside that window still renders: a two-month GBP batch
+       inside a three-month blog batch shows both. */
     const inBatch = anchor
       ? [...new Set(sorted.filter(r => r.plan_batch_id === anchor)
                           .map(r => r.month_key))].sort()
