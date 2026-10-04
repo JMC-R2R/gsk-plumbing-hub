@@ -65,6 +65,33 @@
   .whochip{font-family:var(--mono);font-size:11px;color:#9aa3b2}
   .whochip b{color:var(--blue)}
   .cover{padding:8px 0 26px}
+  .hello{font-size:clamp(19px,2.4vw,24px);font-weight:800;color:#fff;margin:0 0 10px;letter-spacing:-.2px}
+  .hello-sub{font-size:14.5px;color:#c4cbd6;margin:10px 0 0;max-width:68ch}
+  .hello-sub b{color:#fff}
+  .teamnote{display:inline-flex;align-items:center;gap:7px;margin-top:12px;font-family:var(--mono);font-size:10.5px;
+    letter-spacing:.08em;text-transform:uppercase;color:#d9cdf7;background:#2a2142;border:1px solid #4a3f6b;
+    border-radius:999px;padding:5px 12px}
+  /* Month strip: every month of the plan on one row of cards, so nobody scrolls a tab bar
+     sideways. A client sees their current plan; later months show, greyed and locked. */
+  .mstrip{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:10px;margin:0 0 22px}
+  .mcard{appearance:none;text-align:left;font:inherit;border:1px solid var(--line);border-radius:12px;background:#fff;
+    padding:12px 13px;cursor:pointer;display:flex;flex-direction:column;gap:3px;transition:border-color .15s,box-shadow .15s,transform .15s;color:var(--ink)}
+  .mcard:hover{border-color:var(--accent);box-shadow:0 8px 20px -14px rgba(15,15,18,.4);transform:translateY(-1px)}
+  .mcard.on{border-color:var(--accent);background:var(--accent-fill);color:var(--on-accent);box-shadow:0 10px 24px -14px rgba(15,15,18,.55)}
+  .mcard .mn{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+  .mcard .mm{font-size:16px;font-weight:900;line-height:1.2}
+  .mcard .mp{font-size:12px;opacity:.85}
+  .mcard .mbar{height:5px;border-radius:5px;background:rgba(127,140,160,.22);overflow:hidden;margin-top:6px}
+  .mcard .mbar i{display:block;height:100%;background:var(--good);border-radius:5px}
+  .mcard.on .mbar{background:rgba(255,255,255,.28)} .mcard.on .mbar i{background:#fff}
+  .mcard .mtag{align-self:flex-start;margin-top:5px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;border-radius:999px;padding:2px 7px;background:#f1edfb;color:#5b45a8;border:1px solid #ddd3f5}
+  .mcard.locked{cursor:not-allowed;background:repeating-linear-gradient(135deg,#f6f7f9,#f6f7f9 8px,#f1f3f6 8px,#f1f3f6 16px);
+    color:#9aa3b2;border-style:dashed}
+  .mcard.locked:hover{transform:none;box-shadow:none;border-color:var(--line)}
+  .mcard.locked .mm{color:#9aa3b2}
+  .mcard .lockrow{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600}
+  .sec-head .mname{font-weight:600;opacity:.65;margin-left:2px}
   .cover h1{font-size:clamp(25px,3.6vw,38px);font-weight:900;color:#fff;margin:0 0 8px}
   .cover p.sub{margin:0;color:#c4ccd8;font-size:14.5px;max-width:760px}
 
@@ -105,7 +132,17 @@
 
   /* ---------- tabs ---------- */
   .tabsbar{background:var(--ink-dk);border-top:1px solid #23252c;position:sticky;top:0;z-index:30}
-  .tabs{display:flex;overflow-x:auto}
+  .tabs{display:flex;flex-wrap:wrap;align-items:stretch;gap:0 22px}
+  .tabgroup{display:flex;flex-wrap:nowrap;align-items:stretch;min-width:0}
+  .tabgroup .glabel{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:#6f7787;display:flex;align-items:center;padding:0 10px 0 0;white-space:nowrap}
+  .tabgroup.r2ronly{margin-left:auto;background:linear-gradient(180deg,#221a36,#1a1529);border-left:1px solid #3a2f57;
+    border-right:1px solid #3a2f57;padding:0 6px}
+  .tabgroup.r2ronly .glabel{color:#b79cf0;padding-left:8px;gap:6px}
+  .tabgroup.r2ronly .tab-btn{color:#a99bc9}
+  .tabgroup.r2ronly .tab-btn:hover,.tabgroup.r2ronly .tab-btn.active{color:#fff}
+  .tabgroup.r2ronly .tab-btn.active{border-bottom-color:#b79cf0}
+  @media screen and (max-width:760px){ .tabgroup{flex-wrap:wrap} .tabgroup.r2ronly{margin-left:0;width:100%} .tab-btn{padding:11px 11px} }
   .tab-btn{appearance:none;border:0;border-bottom:3px solid transparent;background:transparent;
     color:#9aa3b2;font-family:var(--sans);font-weight:700;font-size:13px;padding:13px 16px;
     cursor:pointer;white-space:nowrap}
@@ -150,13 +187,25 @@
   .stat{background:var(--ink-dk);border-radius:12px;padding:16px 20px;color:#fff;min-width:150px;flex:1 1 150px;
         background-image:radial-gradient(circle at 90% 0%,rgba(23,180,240,.28),transparent 60%)}
   .stat .big{font-size:30px;font-weight:900;color:var(--accent-lit);line-height:1}
-.tickl.no{color:#ff9d9d}
-.rejbox{margin:8px 0 2px;padding:10px 12px;border:1px solid #6b2b2b;border-radius:10px;background:#2a1515}
-.rejbox label{display:block;font-size:12.5px;color:#ffb3b3;margin-bottom:6px}
-.rejbox textarea{width:100%;background:#1b1020;color:#f4f4f6;border:1px solid #6b2b2b;
-  border-radius:8px;padding:8px;font:inherit;font-size:14px}
-.rejbox .btn{margin-top:8px}
-.rejmsg{margin-left:10px;font-size:12.5px;color:#9ad7a0}
+.tickl.no{color:#c2410c}
+.rejbox{margin:12px 0 4px;padding:16px 18px;border:1px solid #f6d3bf;border-left:4px solid #f08a4b;border-radius:12px;
+  background:linear-gradient(135deg,#fff7f2,#fff)}
+.rejbox .rjh{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.rejbox .rjh .ri{width:32px;height:32px;border-radius:50%;background:#ffe7d9;color:#c2410c;display:flex;align-items:center;
+  justify-content:center;flex:0 0 auto}
+.rejbox .rjh b{display:block;font-size:15px;color:var(--ink-dk)}
+.rejbox .rjh span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.rejbox textarea{width:100%;background:#fff;color:var(--ink);border:1px solid #ecd9cc;border-radius:10px;padding:10px 12px;
+  font:inherit;font-size:14.5px;min-height:76px;resize:vertical}
+.rejbox textarea:focus{outline:none;border-color:#f08a4b;box-shadow:0 0 0 4px rgba(240,138,75,.15)}
+.rejbox .rjrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.rejbox .rjrow .btn{padding:9px 18px;border-radius:9px}
+.rejbox .btn.rjsave{background:#c2410c;border-color:#c2410c;color:#fff}
+.rejbox .btn.ghost{background:#fff}
+.rejbox.saved{border-left-color:#1c7c54;border-color:#cfe8da;background:linear-gradient(135deg,#f3fbf6,#fff)}
+.rejbox.saved .rjh .ri{background:#d6f0e1;color:#1c7c54}
+.rejmsg{font-size:13px;color:#1c7c54}
+.rejmsg.err{color:#b42318}
   .stat .lbl{font-size:12px;color:#c4ccd8;margin-top:7px}
 
   /* ---------- tables ---------- */
@@ -626,14 +675,14 @@
   .artwrap{position:fixed;inset:0;background:rgba(12,20,28,.66);z-index:9100;display:flex;
     align-items:stretch;justify-content:center;padding:18px}
   .artwrap[hidden]{display:none}
-  .artsheet{background:#fff;color:#1b2430;width:100%;max-width:1240px;border-radius:14px;
+  .artsheet{background:#fff;color:#1b2430;width:100%;min-width:0;max-width:1240px;border-radius:14px;
     display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 70px -20px rgba(0,0,0,.6)}
   .arthead{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid #e3e8ee;background:#f7f9fb}
   .arthead .t{flex:1;min-width:0;font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .arthead .hint{font-size:12.5px;color:#5d6b79}
   .artx{background:none;border:0;font-size:28px;line-height:1;cursor:pointer;color:#3c4a57;padding:0 4px}
   .artmain{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:0}
-  .artbody{overflow:auto;padding:28px clamp(16px,4vw,54px) 60px;font-size:16.5px;line-height:1.72}
+  .artbody{min-width:0;overflow-wrap:anywhere;overflow:auto;padding:28px clamp(16px,4vw,54px) 60px;font-size:16.5px;line-height:1.72}
   .artbody h1{font-size:30px;line-height:1.15;margin:0 0 16px}
   .artbody h2{font-size:22px;margin:30px 0 10px}
   .artbody h3{font-size:17.5px;margin:22px 0 8px}
@@ -680,10 +729,136 @@
   @media screen and (max-width:860px){
     .artwrap{padding:0}
     .artsheet{border-radius:0}
-    .artmain{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
+    .artmain{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
+    .artbody table{display:block;overflow-x:auto}
+    .artbody h1{font-size:24px}
     .artside{border-left:0;border-top:1px solid #e3e8ee;max-height:38vh}
     .arthead .hint{display:none}
   }
+
+  /* ---------- admin tab ----------
+     Cards, not tables: this is the page Jose, Jhen and Janice run the client from. */
+  .adm{display:grid;gap:26px}
+  .adm-sec{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;
+    box-shadow:0 1px 2px rgba(15,15,18,.04),0 12px 32px -18px rgba(15,15,18,.18)}
+  .adm-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .adm-head h3{margin:0;font-size:19px;font-weight:900;color:var(--ink-dk)}
+  .adm-head p{margin:4px 0 0;font-size:13px;color:var(--muted);max-width:62ch}
+  .adm-count{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:5px 11px;white-space:nowrap}
+  .adm-rel{display:flex;align-items:center;gap:16px;border-radius:16px;padding:18px 20px;flex-wrap:wrap;
+    border:1px solid #f1c9c9;background:linear-gradient(135deg,#fff5f5,#fff)}
+  .adm-rel.on{border-color:#bfe3cf;background:linear-gradient(135deg,#f0faf4,#fff)}
+  .adm-rel .ico{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    background:#fde3e3;color:#b42318;flex:0 0 auto}
+  .adm-rel.on .ico{background:#d6f0e1;color:var(--good)}
+  .adm-rel .txt{flex:1 1 280px;min-width:0}
+  .adm-rel b{display:block;font-size:16px;color:var(--ink-dk)}
+  .adm-rel span.d{font-size:13.5px;color:var(--muted)}
+  .btn.danger{background:#fff;border-color:#e4b4b4;color:#b42318}
+  .btn.danger:hover{background:#fff5f5}
+  .adm-compose{border:1px solid var(--line);border-radius:14px;background:var(--soft);padding:14px;margin-bottom:16px;
+    transition:border-color .15s,box-shadow .15s}
+  .adm-compose:focus-within{border-color:var(--blue);box-shadow:0 0 0 4px rgba(23,180,240,.12);background:#fff}
+  .adm-compose textarea{width:100%;border:0;background:transparent;resize:vertical;min-height:52px;font:inherit;
+    font-size:15px;color:var(--ink);outline:none;padding:2px}
+  .adm-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+  .adm-field{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:0 11px;height:40px;flex:0 1 210px;min-width:150px}
+  .adm-field svg{flex:0 0 auto;color:var(--muted)}
+  .adm-field input{border:0;outline:none;background:transparent;font:inherit;font-size:14px;color:var(--ink);width:100%;min-width:0;margin:0;padding:0;box-shadow:none}
+  .adm-field:focus-within{border-color:var(--blue)}
+  .adm-row .btn{height:40px;padding:0 20px;border-radius:10px}
+  .adm-row .grow{flex:1}
+  .adm-msg{font-size:13px;color:var(--muted)}
+  .adm-msg.err{color:#b42318}
+  .tasks{display:grid;gap:10px}
+  .task{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;
+    border:1px solid var(--line);border-left:4px solid var(--st-start);border-radius:12px;padding:13px 14px;background:#fff;
+    transition:box-shadow .15s,transform .15s}
+  .task:hover{box-shadow:0 8px 22px -14px rgba(15,15,18,.35)}
+  .task.doing{border-left-color:var(--st-work)}
+  .task.done{border-left-color:var(--st-done);background:#fafcfb}
+  .task.done .tbody{text-decoration:line-through;color:var(--muted)}
+  .task .tbody{font-size:15px;font-weight:600;color:var(--ink-dk);line-height:1.4;word-break:break-word}
+  .task .tmeta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:6px;font-size:12.5px;color:var(--muted)}
+  .chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px 3px 3px;background:var(--soft);
+    border:1px solid var(--line);font-size:12.5px;font-weight:600;color:var(--ink)}
+  .chip.plain{padding:3px 10px}
+  .chip.due-late{background:#fdecec;border-color:#f3c2c2;color:#b42318}
+  .chip.due-soon{background:#fff5e6;border-color:#f4d6a6;color:#8a5a00}
+  .av{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+    font-size:10.5px;font-weight:800;color:#fff;flex:0 0 auto;letter-spacing:.02em}
+  .av.lg{width:42px;height:42px;font-size:15px}
+  .seg{display:inline-flex;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px}
+  .seg button{border:0;background:transparent;font:inherit;font-size:12.5px;font-weight:700;color:var(--muted);
+    padding:6px 11px;border-radius:7px;cursor:pointer;white-space:nowrap}
+  .seg button:hover{color:var(--ink)}
+  .seg button.on{background:#fff;color:var(--ink-dk);box-shadow:0 1px 3px rgba(15,15,18,.14)}
+  .seg button.on[data-val=open]{color:#8a5a00}
+  .seg button.on[data-val=doing]{color:#0a6a93}
+  .seg button.on[data-val=done]{color:var(--good)}
+  .tside{display:flex;align-items:center;gap:8px}
+  .tstate{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff5e6;color:#b7791f}
+  .tstate.doing{background:var(--soft-blue);color:#0a6a93}
+  .tstate.done{background:#e3f4ea;color:var(--good)}
+  .iconbtn{width:34px;height:34px;border-radius:9px;border:1px solid transparent;background:transparent;color:var(--muted);
+    display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+  .iconbtn:hover{background:#fdecec;color:#b42318;border-color:#f3c2c2}
+  .tlog{position:relative}
+  .tday{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);margin:18px 0 8px}
+  .tday:first-child{margin-top:0}
+  .tev{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:start;padding:10px 0;position:relative}
+  .tev:not(:last-child)::after{content:"";position:absolute;left:17px;top:44px;bottom:-6px;width:2px;background:var(--line)}
+  .tdot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;
+    position:relative;z-index:1;box-shadow:0 0 0 4px #fff}
+  .tev .line1{font-size:14.5px;color:var(--ink)}
+  .tev .line1 b{color:var(--ink-dk)}
+  .tev .item{display:inline-block;margin-top:5px;font-size:13px;font-weight:600;color:var(--ink-dk);background:var(--soft);
+    border:1px solid var(--line);border-radius:8px;padding:3px 9px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tev .quote{margin-top:7px;font-size:13.5px;color:var(--ink);background:#fffaf0;border-left:3px solid #e8a33d;
+    border-radius:0 8px 8px 0;padding:7px 11px}
+  .tev .quote.bad{background:#fdf1f1;border-left-color:#d64545;color:#8f1d1d}
+  .tev .t{font-size:12px;color:var(--muted);white-space:nowrap;padding-top:8px}
+  .tmore{margin-top:10px}
+  .team{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-bottom:16px}
+  .member{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:13px;background:#fff}
+  .member b{display:block;font-size:14.5px;color:var(--ink-dk);line-height:1.25}
+  .member span{font-size:12.5px;color:var(--muted)}
+  .badge-admin{display:inline-block;margin-top:4px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:#0a6a93;background:var(--soft-blue);border:1px solid #bfe6f8;border-radius:999px;padding:2px 8px}
+  .adm-check{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:var(--ink);
+    height:40px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;margin:0}
+  .adm-check input{margin:0;accent-color:var(--blue)}
+  @media screen and (max-width:640px){
+    .adm-sec{padding:16px;border-radius:14px}
+    .task{grid-template-columns:minmax(0,1fr);gap:10px}
+    .task .tcheck{display:none}
+    .tside{justify-content:space-between}
+    .adm-field{flex:1 1 100%}
+    .adm-row .btn{flex:1 1 100%}
+    .tev{grid-template-columns:36px minmax(0,1fr)}
+    .tev .t{grid-column:2;padding-top:0;order:3}
+  }
+  /* ---------- client feedback inbox (staff) ---------- */
+  .fbbar{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+  .fbchip{appearance:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font:inherit;
+    font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;display:inline-flex;gap:7px;align-items:center}
+  .fbchip b{font-family:var(--mono);font-size:11px;background:var(--soft);border-radius:999px;padding:1px 7px;color:var(--ink)}
+  .fbchip.on{background:var(--ink-dk);border-color:var(--ink-dk);color:#fff}
+  .fbchip.on b{background:rgba(255,255,255,.18);color:#fff}
+  .fblist{display:grid;gap:12px}
+  .fb{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:14px;align-items:start;background:#fff;
+    border:1px solid var(--line);border-radius:14px;padding:15px 16px;box-shadow:0 10px 26px -20px rgba(15,15,18,.4)}
+  .fb .fi{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff}
+  .fb .fk{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .fb .ft{font-size:15px;font-weight:800;color:var(--ink-dk);margin:3px 0 6px;line-height:1.3}
+  .fb .fq{font-size:12.5px;color:var(--muted);border-left:3px solid #e8a33d;padding-left:9px;margin:0 0 6px}
+  .fb .fx{font-size:14.5px;color:var(--ink);white-space:pre-wrap;word-break:break-word;background:var(--soft);border-radius:10px;padding:10px 12px}
+  .fb .fm{font-size:12.5px;color:var(--muted);margin-top:8px}
+  .fb .fgo{white-space:nowrap}
+  @media screen and (max-width:640px){ .fb{grid-template-columns:40px minmax(0,1fr)} .fb .fgo{grid-column:2} }
 </style>
 </head>
 <body>
@@ -751,9 +926,11 @@
         </div>
       </div>
       <div class="cover">
+        <p class="hello" id="hello"></p>
         <p class="kicker">Content Hub</p>
         <h1>GSK Plumbing Solutions</h1>
         <p class="sub">Your plan, this month's work, and what needs your approval.</p>
+        <p class="hello-sub" id="helloSub"></p>
       </div>
     </div>
   </header>
@@ -1147,11 +1324,13 @@ function captureSelection(){
   pop.style.left = Math.min(window.innerWidth - 130, Math.max(8, rect.left + rect.width / 2 - 55)) + 'px';
 }
 
-document.addEventListener('mouseup', e => { if (!e.target.closest('#selPop,#cForm')) setTimeout(captureSelection, 10); });
-document.addEventListener('touchend', e => { if (!e.target.closest('#selPop,#cForm')) setTimeout(captureSelection, 250); });
+const inPopup = e => e.target instanceof Element && !!e.target.closest('#selPop,#cForm');
+document.addEventListener('mouseup', e => { if (!inPopup(e)) setTimeout(captureSelection, 10); });
+document.addEventListener('touchend', e => { if (!inPopup(e)) setTimeout(captureSelection, 250); });
 $('artBody').addEventListener('scroll', hideSel);
 
-$('selPop').addEventListener('click', () => {
+$('selPop').addEventListener('click', e => {
+  e.stopPropagation();
   if (!PENDINGSEL) return;
   const pop = $('selPop').getBoundingClientRect();
   hideSel();
@@ -1234,10 +1413,11 @@ async function boot(){
   if (WATERMARK) document.documentElement.style.setProperty('--wm', 'url(' + WATERMARK + ')');
 
   $('loginView').classList.add('hide'); $('appView').classList.remove('hide');
-  $('whoChip').innerHTML = esc(ME.name) + ' &middot; <b>' + (ME.kind==='internal'?'INTERNAL':'CLIENT') + '</b>';
+  $('whoChip').innerHTML = esc(ME.name) + (ME.kind==='internal' ? ' &middot; <b>READY TO RANK</b>' : '');
 
   await loadData();
   buildTabs();
+  paintGreeting();
   openDeepLink();
 }
 
@@ -1296,6 +1476,12 @@ async function loadData(){
 /* Expand the "months" placeholder into one tab per month actually present in the
    data, drop tabs this login may not see, then number what is left. Numbering
    last is the point: a client sees 01..05 with no gaps. */
+let LOCKED_MONTHS = [], CLIENT_MONTHS = [];
+const monthName = mk => { if (!mk) return ''; const [y, m] = String(mk).split('-').map(Number);
+  return new Date(y, m - 1, 1).toLocaleDateString('en-AU', { month:'long', year:'numeric' }); };
+const monthShort = mk => { if (!mk) return ''; const [y, m] = String(mk).split('-').map(Number);
+  return new Date(y, m - 1, 1).toLocaleDateString('en-AU', { month:'short' }); };
+
 function expandTabs(){
   const allMonths = [...new Set(ITEMS.map(r => r.month_key))].sort();
   /* A client is only ever asked to approve one PLAN at a time. When the next
@@ -1305,7 +1491,8 @@ function expandTabs(){
      Anchored on the batch, never on a rolling count of months: approving one
      month must not slide the window and drop the month just approved. */
   let months = allMonths;
-  if (ME.kind !== 'internal' && allMonths.length > 3) {
+  // Worked out for everyone, so staff can see which months the client cannot see yet.
+  if (allMonths.length > 3) {
     const sorted = ITEMS.slice().sort((a, b) =>
       String(a.month_key).localeCompare(String(b.month_key)));
     /* The EARLIEST plan batch that still holds something unapproved, by its own
@@ -1344,6 +1531,12 @@ function expandTabs(){
         : allMonths.slice(-3);
     }
   }
+  CLIENT_MONTHS = months;
+  // Staff get one inbox for every note, change request and comment, so nobody has to
+  // open each month and card to find what the client said.
+  const lastOpen = months[months.length - 1];
+  LOCKED_MONTHS = lastOpen ? allMonths.filter(m => m > lastOpen) : [];
+  if (ME.kind === 'internal') months = allMonths;
   const out = [];
   for (const t of CFG.tabs) {
     if (!t.enabled) continue;
@@ -1355,23 +1548,62 @@ function expandTabs(){
                                      title:'Month 1 Brief', short:'Month 1'}));
       continue;
     }
-    months.forEach((mk, i) => out.push(Object.assign({}, t, {
-      key: 'month:'+mk, monthKey: mk,
-      title: 'Month '+(i+1)+' Brief', short: 'Month '+(i+1)
-    })));
+    // Numbered by position in the whole plan, so "Month 2" means the same month to the
+    // client and to the team.
+    months.forEach(mk => { const i = allMonths.indexOf(mk); out.push(Object.assign({}, t, {
+      key: 'month:'+mk, monthKey: mk, monthIndex: i + 1,
+      title: 'Month '+(i+1)+' Brief', monthLabel: monthName(mk), short: 'Month '+(i+1)
+    })); });
   }
-  out.forEach((t, i) => { t.num = String(i+1).padStart(2,'0'); });
+  if (ME.kind === 'internal') out.push({ key:'feedback', audience:'internal', enabled:true,
+    title:'Client feedback', short:'Feedback',
+    intro:'Every note, change request and comment from the client, newest first. Open any one to jump straight to the item.' });
+  // One number per tab BUTTON: every month shares the Content plan tab's number.
+  let n = 0, planNum = null;
+  out.forEach(t => {
+    if (t.monthKey !== undefined) { if (!planNum) planNum = String(++n).padStart(2,'0'); t.num = planNum; }
+    else t.num = String(++n).padStart(2,'0');
+  });
   return out;
+}
+
+const LOCK_SVG = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+
+function tabButtons(){
+  // Months collapse into one "Content plan" button; the month cards inside switch months.
+  const btns = [];
+  TABLIST.forEach(t => {
+    if (t.monthKey !== undefined) {
+      if (!btns.some(b => b.key === 'plan'))
+        btns.push({ key:'plan', num:t.num, short:'Content plan', audience:t.audience });
+    } else btns.push(t);
+  });
+  return btns;
 }
 
 function buildTabs(){
   TABLIST = expandTabs();
-  $('tabs').innerHTML = TABLIST.map((t,i) =>
-    '<button class="tab-btn'+(i===0?' active':'')+'" data-key="'+esc(t.key)+'">'
-    + '<span class="tn">'+esc(t.num)+'</span>' + esc(t.short)
-    + (ME.kind==='internal' ? '<span class="aud '+t.audience+'">'
-        + (t.audience==='admin'?'Admin':(t.audience==='internal'?'Int':(t.audience==='client'?'Client':'Both'))) + '</span>' : '')
-    + '</button>').join('');
+  const btn = (t, i) => '<button class="tab-btn'+(i===0?' active':'')+'" data-key="'+esc(t.key)+'">'
+    + '<span class="tn">'+esc(t.num)+'</span>' + esc(t.short) + '</button>';
+  let all = tabButtons();
+  const isTeam = t => t.audience === 'internal' || t.audience === 'admin';
+  if (ME.kind === 'internal') {
+    // Number in the order the buttons appear: client-facing group first, then team.
+    all = all.filter(t => !isTeam(t)).concat(all.filter(isTeam));
+    all.forEach((b, i) => {
+      const num = String(i + 1).padStart(2, '0'); b.num = num;
+      TABLIST.forEach(t => { if (t.key === b.key || (b.key === 'plan' && t.monthKey !== undefined)) t.num = num; });
+    });
+  }
+  if (ME.kind === 'internal') {
+    const team = all.filter(isTeam);
+    const shared = all.filter(t => !team.includes(t));
+    $('tabs').innerHTML = '<div class="tabgroup"><span class="glabel">Client sees</span>' + shared.map(btn).join('') + '</div>'
+      + (team.length ? '<div class="tabgroup r2ronly"><span class="glabel">' + LOCK_SVG + ' Ready to Rank only</span>'
+        + team.map((t, i) => btn(t, i + shared.length)).join('') + '</div>' : '');
+  } else {
+    $('tabs').innerHTML = '<div class="tabgroup">' + all.map(btn).join('') + '</div>';
+  }
   $('panels').innerHTML = TABLIST.map((t,i) =>
     '<section class="tab-panel'+(i===0?' active':'')+'" id="panel-'+cssId(t.key)+'"></section>').join('');
   $('tabs').addEventListener('click', e => {
@@ -1384,7 +1616,14 @@ function buildTabs(){
 const cssId = key => key.replace(':','--');
 
 function selectTab(key, scroll){
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.key===key));
+  if (key === 'plan') {
+    const m = actionMonth() || TABLIST.find(t => t.monthKey);
+    key = m ? m.key : 'month:none';
+  }
+  const btnKey = String(key).startsWith('month:') ? 'plan' : key;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.key===btnKey));
+  const strip = document.querySelector('#panel-'+cssId(key)+' .mstrip');
+  if (strip) strip.outerHTML = monthStrip(key);
   document.querySelectorAll('.tab-panel').forEach(p =>
     p.classList.toggle('active', p.id === 'panel-'+cssId(key)));
   if (scroll !== false) window.scrollTo({top:0,behavior:'smooth'});
@@ -1422,18 +1661,131 @@ function openDeepLink(){
 }
 
 function head(t){
-  return '<div class="sec-head"><span class="sec-num">'+esc(t.num)+'</span><h2>'+esc(t.title)+'</h2></div>'
+  return '<div class="sec-head"><span class="sec-num">'+esc(t.num)+'</span><h2>'+esc(t.title)
+       + (t.monthLabel ? ' <span class="mname">· '+esc(t.monthLabel)+'</span>' : '')+'</h2></div>'
        + (t.intro ? '<p class="intro">'+esc(t.intro)+'</p>' : '');
+}
+
+function monthStrip(activeKey){
+  const months = TABLIST.filter(t => t.monthKey);
+  if (months.length + LOCKED_MONTHS.length < 2) return '';
+  const card = t => {
+    const rows = ITEMS.filter(r => r.month_key === t.monthKey);
+    const ok = rows.filter(r => r.approved).length;
+    const pct = rows.length ? Math.round(ok / rows.length * 100) : 0;
+    const hidden = ME.kind === 'internal' && !CLIENT_MONTHS.includes(t.monthKey);
+    return '<button type="button" class="mcard'+(t.key === activeKey ? ' on' : '')+'" data-month="'+esc(t.key)+'">'
+      + '<span class="mn">Month '+t.monthIndex+'</span><span class="mm">'+esc(t.monthLabel)+'</span>'
+      + '<span class="mp">'+ok+' of '+rows.length+' approved</span><span class="mbar"><i style="width:'+pct+'%"></i></span>'
+      + (hidden ? '<span class="mtag">Client can\'t see yet</span>' : '')
+      + '</button>';
+  };
+  const locked = ME.kind === 'internal' ? [] : LOCKED_MONTHS.map(mk =>
+    '<div class="mcard locked" aria-disabled="true" title="This month opens once the months before it are approved">'
+    + '<span class="mn">Coming up</span><span class="mm">'+esc(monthName(mk))+'</span>'
+    + '<span class="lockrow">'+LOCK_SVG+' Opens after '+esc(monthShort(CLIENT_MONTHS[CLIENT_MONTHS.length-1]))+'</span></div>');
+  return '<div class="mstrip" role="tablist" aria-label="Months">' + months.map(card).join('') + locked.join('') + '</div>';
+}
+
+document.addEventListener('click', e => {
+  const c = e.target.closest && e.target.closest('.mcard[data-month]');
+  if (c) selectTab(c.dataset.month, false);
+});
+
+/* Personal greeting: the client's first name, and what is waiting on them. */
+function paintGreeting(){
+  const first = String(ME.name || '').trim().split(/\s+/)[0] || 'there';
+  $('hello').textContent = 'Hi ' + first + ',';
+  if (ME.kind === 'internal') {
+    $('helloSub').innerHTML = '<span class="teamnote">' + LOCK_SVG + ' Viewing as the Ready to Rank team</span>';
+    return;
+  }
+  const open = ITEMS.filter(r => CLIENT_MONTHS.includes(r.month_key));
+  const waiting = open.filter(r => r.client_status === 'for_approval' || topicWaiting(r)).length;
+  const comments = Object.values(typeof OPENCOMMENTS === 'object' ? OPENCOMMENTS : {}).reduce((a, b) => a + b, 0);
+  const am = actionMonth();
+  $('helloSub').innerHTML = waiting
+    ? 'You have <b>' + waiting + ' item' + (waiting === 1 ? '' : 's') + '</b> waiting for your approval'
+      + (am ? ' in <b>' + esc(am.monthLabel) + '</b>' : '') + '.'
+    : 'You are all caught up. Nothing is waiting on you right now.';
+}
+
+/* ---------------- client feedback inbox (staff) ----------------
+   Jose 04/10/2026: "Is there a section where the team get all the notes in one area?"
+   Pulls the three places a client leaves words: the Notes box on a card, the reason
+   on Not approved, and comments on a written article. */
+const FB_STYLE = {
+  note:     { bg:'#e8a33d', label:'Note', icon:'note' },
+  rejected: { bg:'#d64545', label:'Change requested', icon:'x' },
+  comment:  { bg:'#7c5cd6', label:'Comment on the draft', icon:'note' }
+};
+let FB_FILTER = 'all';
+
+async function wireFeedback(el){
+  const [ev, cm] = await Promise.all([
+    sb.from('ch_item_events').select('item_id,kind,actor_name,created_at,detail')
+      .eq('client_id', CLIENT_ID).in('kind', ['note_added','not_approved']).order('created_at', {ascending:false}).limit(500),
+    sb.from('ch_item_comments').select('*').eq('client_id', CLIENT_ID).order('created_at', {ascending:false})
+  ]);
+  const lastBy = kind => { const m = {}; (ev.data || []).forEach(e => { if (e.kind === kind && !m[e.item_id]) m[e.item_id] = e; }); return m; };
+  const noteEv = lastBy('note_added'), rejEv = lastBy('not_approved');
+  const list = [];
+  ITEMS.forEach(r => {
+    if (r.client_notes && r.client_notes.trim()) list.push({ type:'note', item:r, text:r.client_notes,
+      who:(noteEv[r.id]||{}).actor_name, at:(noteEv[r.id]||{}).created_at || r.updated_at });
+    if (r.not_approved && r.not_approved_reason) list.push({ type:'rejected', item:r, text:r.not_approved_reason,
+      who:(rejEv[r.id]||{}).actor_name, at:r.not_approved_at || (rejEv[r.id]||{}).created_at || r.updated_at });
+  });
+  (cm.data || []).forEach(c => {
+    const r = ITEMS.find(x => x.id === c.item_id);
+    if (r && c.status === 'open') list.push({ type:'comment', item:r, text:c.body, quote:c.quote, who:c.author_name, at:c.created_at });
+  });
+  list.sort((a, b) => String(b.at || '').localeCompare(String(a.at || '')));
+  const paint = () => {
+    const counts = { all:list.length, note:0, rejected:0, comment:0 }; list.forEach(x => counts[x.type]++);
+    const shown = list.filter(x => FB_FILTER === 'all' || x.type === FB_FILTER);
+    el.querySelector('#fbBody').innerHTML =
+      '<div class="fbbar">' + [['all','All'],['rejected','Change requests'],['note','Notes'],['comment','Draft comments']]
+        .map(([k, l]) => '<button type="button" class="fbchip' + (FB_FILTER === k ? ' on' : '') + '" data-fbf="' + k + '">'
+          + l + ' <b>' + counts[k] + '</b></button>').join('') + '</div>'
+      + (shown.length ? '<div class="fblist">' + shown.map((x, i) => {
+          const st = FB_STYLE[x.type], r = x.item;
+          return '<div class="fb"><span class="fi" style="background:' + st.bg + '">' + (ICON[st.icon] || '') + '</span>'
+            + '<div><div class="fk">' + st.label + ' · ' + esc(monthName(r.month_key)) + '</div>'
+            + '<div class="ft">' + esc(r.title) + '</div>'
+            + (x.quote ? '<p class="fq">“' + esc(x.quote) + '”</p>' : '')
+            + '<div class="fx">' + esc(x.text) + '</div>'
+            + '<div class="fm">' + esc(x.who || 'Client') + (x.at ? ' · ' + esc(cWhen(x.at)) : '') + '</div></div>'
+            + '<button type="button" class="btn ghost fgo" data-fbgo="' + i + '">' + (x.type === 'comment' ? 'Open draft' : 'Go to item') + '</button></div>';
+        }).join('') + '</div>'
+        : '<p class="empty">No client feedback yet.</p>');
+    el.querySelectorAll('[data-fbf]').forEach(b => b.addEventListener('click', () => { FB_FILTER = b.dataset.fbf; paint(); }));
+    el.querySelectorAll('[data-fbgo]').forEach(b => b.addEventListener('click', () => {
+      const x = shown[+b.dataset.fbgo];
+      if (x.type === 'comment') { openArticle(x.item.id); return; }
+      const t = TABLIST.find(m => m.monthKey === x.item.month_key);
+      if (!t) return;
+      selectTab(t.key, false);
+      setTimeout(() => {
+        const row = document.getElementById(x.item.anchor); if (!row) return;
+        row.scrollIntoView({ behavior:'smooth', block:'center' });
+        row.classList.add('flash'); setTimeout(() => row.classList.remove('flash'), 2400);
+        if (x.type === 'note') { const p = document.getElementById('note-' + x.item.id); if (p) p.hidden = false; }
+      }, 150);
+    }));
+  };
+  paint();
 }
 
 function renderPanel(t){
   const el = $('panel-'+cssId(t.key));
   if (!el) return;
-  if (t.monthKey !== undefined) { el.innerHTML = head(t)+monthBriefMarkup(t); wireMonthBrief(el,t); return; }
+  if (t.monthKey !== undefined) { el.innerHTML = head(t)+monthStrip(t.key)+monthBriefMarkup(t); wireMonthBrief(el,t); return; }
   if (t.key === 'keywords')     { el.innerHTML = head(t)+keywordsMarkup();                          return; }
   if (t.key === 'wins')         { el.innerHTML = head(t)+winsMarkup();       wireWins(el);          return; }
   if (t.key === 'progress')     { el.innerHTML = head(t)+progressMarkup();   wireProgress(el);      return; }
   if (t.key === 'admin')        { el.innerHTML = head(t)+adminMarkup();       wireAdmin(el);         return; }
+  if (t.key === 'feedback')     { el.innerHTML = head(t)+'<div id="fbBody"><p class="empty">Loading…</p></div>'; wireFeedback(el); return; }
 
   let body = (t.remote ? TABDOCS[t.key] : t.html) || '<p class="empty">Nothing here yet.</p>';
   const target = t.key === 'strategy' ? actionMonth() : null;
@@ -1464,96 +1816,178 @@ function fmtWhen(ts){
 const EVENT_LABEL = {
   topic_approved:'approved the topic', content_approved:'approved the content',
   not_approved:'marked NOT approved', note_added:'left a note',
-  doc_added:'added a draft', published:'published it',
+  comment_added:'commented', doc_added:'added a draft', published:'published it',
   released_to_client:'released the hub to the client',
   release_withdrawn:'withdrew the release'
 };
 
+const ICON = {
+  lock: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+  unlock: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg>',
+  user: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',
+  cal: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  mail: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+  tag: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12 12 20 4 12V4h8z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>',
+  bin: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
+  circle: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="8"/></svg>',
+  doing: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 4a8 8 0 1 1-8 8"/><path d="M12 8v4l3 2"/></svg>',
+  check: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>',
+  x: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  note: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>',
+  doc: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>',
+  globe: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>'
+};
+
+const EVENT_STYLE = {
+  topic_approved:     { bg:'#17B4F0', icon:'check' },
+  content_approved:   { bg:'#1c7c54', icon:'check' },
+  not_approved:       { bg:'#d64545', icon:'x' },
+  note_added:         { bg:'#e8a33d', icon:'note' },
+  comment_added:      { bg:'#e8a33d', icon:'note' },
+  doc_added:          { bg:'#7c5cd6', icon:'doc' },
+  published:          { bg:'#1c7c54', icon:'globe' },
+  released_to_client: { bg:'#1c7c54', icon:'unlock' },
+  release_withdrawn:  { bg:'#8a94a3', icon:'lock' }
+};
+EVENT_LABEL.comment_added = 'commented on the draft';
+
+const AV_COLOURS = ['#17B4F0','#7c5cd6','#1c7c54','#e8a33d','#d64545','#0f766e','#c2410c','#4f46e5'];
+function avatar(name, cls){
+  const n = String(name || '?').trim();
+  const ini = n.split(/\s+/).filter(Boolean).slice(0,2).map(w => w[0]).join('').toUpperCase() || '?';
+  let h = 0; for (const c of n) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return '<span class="av' + (cls ? ' ' + cls : '') + '" style="background:' + AV_COLOURS[h % AV_COLOURS.length] + '">' + esc(ini) + '</span>';
+}
+const ausDate = iso => { if (!iso) return ''; const [y,m,d] = String(iso).slice(0,10).split('-'); return d + '/' + m + '/' + y; };
+function dueChip(a){
+  if (!a.due_date) return '';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const due = new Date(a.due_date + 'T00:00:00');
+  const days = Math.round((due - today) / 86400000);
+  const cls = a.status === 'done' ? '' : (days < 0 ? ' due-late' : (days <= 2 ? ' due-soon' : ''));
+  const lbl = a.status !== 'done' && days < 0 ? 'Overdue · ' + ausDate(a.due_date)
+            : a.status !== 'done' && days === 0 ? 'Due today' : 'Due ' + ausDate(a.due_date);
+  return '<span class="chip plain' + cls + '">' + ICON.cal + ' ' + esc(lbl) + '</span>';
+}
+function dayLabel(ts){
+  const d = new Date(ts); d.setHours(0,0,0,0);
+  const t = new Date(); t.setHours(0,0,0,0);
+  const diff = Math.round((t - d) / 86400000);
+  if (diff === 0) return 'Today';
+  if (diff === 1) return 'Yesterday';
+  return d.toLocaleDateString('en-AU', { weekday:'short', day:'2-digit', month:'2-digit', year:'numeric' });
+}
+const timeOnly = ts => new Date(ts).toLocaleTimeString('en-AU', { hour:'numeric', minute:'2-digit' });
+
 function adminMarkup(){
   const rel = RELEASED;
-  return ''
-  + '<div class="callout" style="border-color:' + (rel ? '#2f6b3a' : '#6b2b2b')
-    + ';background:' + (rel ? '#16241a' : '#2a1515') + '">'
-    + '<b>' + (rel ? 'This hub is RELEASED.' : 'This hub is NOT released.') + '</b> '
-    + (rel ? 'The client can sign in and see their plan.'
-           : 'A client who signs in sees a holding message, not the plan. Publishing the page does not release it.')
-    + '<button class="btn" type="button" id="relBtn" style="margin-left:12px">'
+  const people = [...new Set([...(ASSIGNEES||[]).map(a => a.display_name), ...(STAFF||[]).map(p => p.name)].filter(Boolean))];
+  return '<div class="adm">'
+  + '<div class="adm-rel' + (rel ? ' on' : '') + '">'
+    + '<div class="ico">' + (rel ? ICON.unlock : ICON.lock) + '</div>'
+    + '<div class="txt"><b>' + (rel ? 'Released to the client' : 'Not released yet') + '</b>'
+    + '<span class="d">' + (rel ? 'The client can sign in and see their plan.'
+           : 'A client who signs in sees a holding message, not the plan. Publishing the page does not release it.') + '</span></div>'
+    + '<button class="btn' + (rel ? ' danger' : '') + '" type="button" id="relBtn">'
     + (rel ? 'Withdraw release' : 'Release to client') + '</button>'
-    + '<span class="rejmsg" id="relMsg"></span>'
+    + '<span class="adm-msg" id="relMsg"></span>'
   + '</div>'
 
-  + '<h3>What still has to happen</h3>'
-  + '<div class="rejbox" style="border-color:#3a3a56;background:#191826">'
-    + '<textarea id="actBody" rows="2" placeholder="What needs doing for this client?"></textarea>'
-    + '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">'
-      + '<input id="actWho" placeholder="Who" style="flex:0 0 140px">'
-      + '<input id="actDue" type="date" style="flex:0 0 160px">'
-      + '<button class="btn" type="button" id="actAdd">Add</button>'
-      + '<span class="rejmsg" id="actMsg"></span>'
+  + '<section class="adm-sec">'
+    + '<div class="adm-head"><div><h3>What still has to happen</h3>'
+    + '<p>Everything outstanding for this client, who owns it and when it is due.</p></div>'
+    + '<span class="adm-count" id="actCount"></span></div>'
+    + '<div class="adm-compose">'
+      + '<textarea id="actBody" rows="2" placeholder="What needs doing for this client?"></textarea>'
+      + '<div class="adm-row">'
+        + '<label class="adm-field" title="Who">' + ICON.user + '<input id="actWho" placeholder="Who" list="admPeople"></label>'
+        + '<label class="adm-field" title="Due date">' + ICON.cal + '<input id="actDue" type="date"></label>'
+        + '<span class="grow adm-msg" id="actMsg"></span>'
+        + '<button class="btn" type="button" id="actAdd">Add task</button>'
+      + '</div>'
+      + '<datalist id="admPeople">' + people.map(n => '<option value="' + esc(n) + '">').join('') + '</datalist>'
     + '</div>'
-  + '</div>'
-  + '<div id="actList"></div>'
+    + '<div id="actList"></div>'
+  + '</section>'
 
-  + '<h3>Change log</h3>'
-  + '<p class="caption">Every approval, rejection, note, draft and publish on this client. '
-    + 'Entries before 03/10/2026 have no name against them because the log did not record one.</p>'
-  + '<div id="evList"></div>'
+  + '<section class="adm-sec">'
+    + '<div class="adm-head"><div><h3>Change log</h3>'
+    + '<p>Every approval, rejection, note, comment, draft and publish on this client. '
+    + 'Entries before 03/10/2026 have no name against them because the log did not record one.</p></div>'
+    + '<span class="adm-count" id="evCount"></span></div>'
+    + '<div id="evList"></div>'
+  + '</section>'
 
-  + '<h3>Team</h3>'
-  + '<p class="caption">Anyone active here can open every hub. Only a hub admin sees this page.</p>'
-  + '<div id="staffList"></div>';
+  + '<section class="adm-sec">'
+    + '<div class="adm-head"><div><h3>Team</h3>'
+    + '<p>Anyone active here can open every hub. Only a hub admin sees this page.</p></div>'
+    + '<span class="adm-count" id="stCount"></span></div>'
+    + '<div id="staffList"></div>'
+  + '</section>'
+  + '</div>';
 }
 
 function actionsMarkup(){
-  if (!ACTIONS.length) return '<p class="empty">Nothing outstanding.</p>';
-  return '<table class="tbl"><thead><tr><th>What</th><th>Who</th><th>Due</th><th>Status</th><th></th></tr></thead><tbody>'
-  + ACTIONS.map(a =>
-      '<tr' + (a.status==='done' ? ' style="opacity:.55"' : '') + '>'
-      + '<td>' + esc(a.body) + '<div class="caption" style="margin:2px 0 0">added by '
-        + esc(a.created_name||'?') + ' ' + fmtWhen(a.created_at) + '</div></td>'
-      + '<td>' + esc(a.assigned_to||'—') + '</td>'
-      + '<td>' + (a.due_date||'—') + '</td>'
-      + '<td><select data-actst="'+a.id+'">'
-        + ['open','doing','done'].map(x =>
-            '<option value="'+x+'"'+(a.status===x?' selected':'')+'>'+x+'</option>').join('')
-        + '</select></td>'
-      + '<td><button class="notebtn" type="button" data-actdel="'+a.id+'">Remove</button></td>'
-      + '</tr>').join('')
-  + '</tbody></table>';
+  if (!ACTIONS.length) return '<p class="empty">Nothing outstanding. Add the first task above.</p>';
+  const order = { doing:0, open:1, done:2 };
+  const list = [...ACTIONS].sort((a,b) => (order[a.status] - order[b.status])
+    || String(a.due_date||'9999').localeCompare(String(b.due_date||'9999')));
+  return '<div class="tasks">' + list.map(a =>
+      '<div class="task ' + esc(a.status) + '">'
+      + '<span class="tcheck tstate ' + esc(a.status) + '">' + (a.status === 'done' ? ICON.check : a.status === 'doing' ? ICON.doing : ICON.circle) + '</span>'
+      + '<div><div class="tbody">' + esc(a.body) + '</div>'
+        + '<div class="tmeta">'
+          + (a.assigned_to ? '<span class="chip">' + avatar(a.assigned_to) + esc(a.assigned_to) + '</span>'
+                           : '<span class="chip plain">Unassigned</span>')
+          + dueChip(a)
+          + '<span>Added by ' + esc(a.created_name || '?') + ' · ' + ausDate(a.created_at) + '</span>'
+          + (a.status === 'done' && a.done_name ? '<span>· Done by ' + esc(a.done_name) + '</span>' : '')
+        + '</div></div>'
+      + '<div class="tside"><div class="seg" role="group" aria-label="Status">'
+        + [['open','Open'],['doing','Doing'],['done','Done']].map(([v,l]) =>
+            '<button type="button" data-actst="' + a.id + '" data-val="' + v + '"' + (a.status === v ? ' class="on"' : '') + '>' + l + '</button>').join('')
+        + '</div>'
+        + '<button class="iconbtn" type="button" data-actdel="' + a.id + '" title="Remove" aria-label="Remove">' + ICON.bin + '</button></div>'
+      + '</div>').join('') + '</div>';
 }
 
 function eventsMarkup(){
   if (!EVENTS.length) return '<p class="empty">Nothing logged yet.</p>';
-  return '<table class="tbl"><thead><tr><th>When</th><th>Who</th><th>What</th><th>Item</th></tr></thead><tbody>'
-  + EVENTS.map(e => {
-      const d = e.detail || {};
-      return '<tr><td style="white-space:nowrap">' + fmtWhen(e.created_at) + '</td>'
-      + '<td>' + esc(e.actor_name || '—') + '</td>'
-      + '<td>' + esc(EVENT_LABEL[e.kind] || e.kind)
-        + (e.kind==='not_approved' && d.reason
-            ? '<div class="caption" style="margin:2px 0 0;color:#ff9d9d">' + esc(d.reason) + '</div>' : '')
-        + (e.kind==='note_added' && d.note
-            ? '<div class="caption" style="margin:2px 0 0">' + esc(d.note) + '</div>' : '')
-      + '</td>'
-      + '<td>' + esc(d.title || '—') + '</td></tr>';
-    }).join('')
-  + '</tbody></table>';
+  let last = '', out = '<div class="tlog">';
+  EVENTS.forEach(e => {
+    const d = e.detail || {};
+    const day = dayLabel(e.created_at);
+    if (day !== last) { out += '<div class="tday">' + esc(day) + '</div>'; last = day; }
+    const st = EVENT_STYLE[e.kind] || { bg:'#8a94a3', icon:'note' };
+    const who = e.actor_name || 'Someone';
+    const extra = e.kind === 'not_approved' && d.reason ? '<div class="quote bad">' + esc(d.reason) + '</div>'
+                : (e.kind === 'note_added' || e.kind === 'comment_added') && d.note
+                  ? '<div class="quote">' + (d.quote ? '<i>“' + esc(d.quote) + '”</i><br>' : '') + esc(d.note) + '</div>' : '';
+    out += '<div class="tev"><span class="tdot" style="background:' + st.bg + '">' + (ICON[st.icon] || '') + '</span>'
+      + '<div><div class="line1"><b>' + esc(who) + '</b> ' + esc(EVENT_LABEL[e.kind] || e.kind) + '</div>'
+      + (d.title ? '<span class="item" title="' + esc(d.title) + '">' + esc(d.title) + '</span>' : '')
+      + extra + '</div>'
+      + '<span class="t">' + timeOnly(e.created_at) + '</span></div>';
+  });
+  return out + '</div>';
 }
 
 function staffMarkup(){
-  return '<table class="tbl"><thead><tr><th>Name</th><th>Role</th><th>Admin</th></tr></thead><tbody>'
-  + STAFF.map(p => '<tr><td>' + esc(p.name) + '</td><td>' + esc(p.role_title||'—') + '</td>'
-      + '<td>' + (p.hub_admin ? 'yes' : '') + '</td></tr>').join('')
-  + '</tbody></table>'
-  + '<div class="rejbox" style="border-color:#3a3a56;background:#191826;margin-top:10px">'
-    + '<label>Add a team member. They get access to every hub.</label>'
-    + '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">'
-      + '<input id="mName" placeholder="Full name" style="flex:1 1 160px">'
-      + '<input id="mEmail" placeholder="email@readytorank.com.au" style="flex:1 1 200px">'
-      + '<input id="mRole" placeholder="Role" style="flex:1 1 120px">'
-      + '<label class="tickl"><input type="checkbox" id="mAdmin"> Hub admin</label>'
+  return '<div class="team">'
+  + STAFF.map(p => '<div class="member">' + avatar(p.name, 'lg')
+      + '<div><b>' + esc(p.name) + '</b><span>' + esc(p.role_title || 'Team member') + '</span>'
+      + (p.hub_admin ? '<br><span class="badge-admin">Hub admin</span>' : '') + '</div></div>').join('')
+  + '</div>'
+  + '<div class="adm-compose">'
+    + '<div style="font-size:13.5px;font-weight:700;color:var(--ink-dk)">Add a team member</div>'
+    + '<div class="adm-msg" style="margin-top:2px">They get access to every hub and sign in with a link sent to their email.</div>'
+    + '<div class="adm-row">'
+      + '<label class="adm-field">' + ICON.user + '<input id="mName" placeholder="Full name"></label>'
+      + '<label class="adm-field" style="flex-basis:250px">' + ICON.mail + '<input id="mEmail" placeholder="email@readytorank.com.au"></label>'
+      + '<label class="adm-field">' + ICON.tag + '<input id="mRole" placeholder="Role"></label>'
+      + '<label class="adm-check"><input type="checkbox" id="mAdmin"> Hub admin</label>'
+      + '<span class="grow adm-msg" id="mMsg"></span>'
       + '<button class="btn" type="button" id="mAdd">Add member</button>'
-      + '<span class="rejmsg" id="mMsg"></span>'
     + '</div>'
   + '</div>';
 }
@@ -1575,6 +2009,13 @@ async function wireAdmin(el){
     el.querySelector('#actList').innerHTML = actionsMarkup();
     el.querySelector('#evList').innerHTML  = eventsMarkup();
     el.querySelector('#staffList').innerHTML = staffMarkup();
+    const dl = el.querySelector('#admPeople');
+    if (dl) dl.innerHTML = [...new Set([...(ASSIGNEES||[]).map(x => x.display_name), ...(STAFF||[]).map(p => p.name)].filter(Boolean))]
+      .map(n => '<option value="' + esc(n) + '">').join('');
+    const openN = ACTIONS.filter(x => x.status !== 'done').length;
+    el.querySelector('#actCount').textContent = openN + ' open';
+    el.querySelector('#evCount').textContent = EVENTS.length + (EVENTS.length === 200 ? '+' : '') + ' entries';
+    el.querySelector('#stCount').textContent = STAFF.length + (STAFF.length === 1 ? ' person' : ' people');
     wireAdminRows(el, paint);
   };
   paint();
@@ -1593,14 +2034,14 @@ async function wireAdmin(el){
   el.querySelector('#actAdd').addEventListener('click', async () => {
     const body = (el.querySelector('#actBody').value || '').trim();
     const msg = el.querySelector('#actMsg');
-    if (!body) { msg.textContent = 'Type what needs doing.'; msg.style.color = '#ff9d9d'; return; }
+    if (!body) { msg.textContent = 'Type what needs doing.'; msg.className = 'grow adm-msg err'; return; }
     msg.textContent = 'Saving…'; msg.style.color = '';
     const { error } = await sb.from('ch_client_actions').insert({
       client_id: CLIENT_ID, body,
       assigned_to: (el.querySelector('#actWho').value || '').trim() || null,
       due_date: el.querySelector('#actDue').value || null,
       created_by: ME.id, created_name: ME.name });
-    if (error) { msg.textContent = 'Could not save that.'; msg.style.color = '#ff9d9d'; return; }
+    if (error) { msg.textContent = 'Could not save that.'; msg.className = 'grow adm-msg err'; return; }
     el.querySelector('#actBody').value = ''; el.querySelector('#actWho').value = '';
     el.querySelector('#actDue').value = ''; msg.textContent = '';
     await loadAdmin(); paint();
@@ -1629,10 +2070,12 @@ async function wireAdmin(el){
 }
 
 function wireAdminRows(el, paint){
-  el.querySelectorAll('[data-actst]').forEach(sel => sel.addEventListener('change', async () => {
-    const id = sel.dataset.actst, done = sel.value === 'done';
+  el.querySelectorAll('[data-actst]').forEach(btn => btn.addEventListener('click', async () => {
+    if (btn.classList.contains('on')) return;
+    const id = btn.dataset.actst, val = btn.dataset.val, done = val === 'done';
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
     await sb.from('ch_client_actions').update({
-      status: sel.value,
+      status: val,
       done_at: done ? new Date().toISOString() : null,
       done_by: done ? ME.id : null, done_name: done ? ME.name : null }).eq('id', id);
     await loadAdmin(); paint();
@@ -1867,12 +2310,18 @@ function itemCard(r, staff){
         + (r.not_approved?' checked':'')
         + ' title="Tell us what needs changing"> Not approved</label>'
     + '</div>'
-    + '<div class="rejbox'+(r.not_approved?'':' hide')+'" data-rejbox="'+id+'">'
-      + '<label>Why not? We will not start on it until this is sorted.</label>'
-      + '<textarea data-rejwhy="'+id+'" rows="2" placeholder="What needs to change?">'
+    + '<div class="rejbox'+(r.not_approved?' saved':' hide')+'" data-rejbox="'+id+'">'
+      + '<div class="rjh"><span class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></span>'
+      + '<div><b>'+(r.not_approved ? 'Thanks, we have your feedback' : 'What would you like us to change?')+'</b>'
+      + '<span>'+(r.not_approved ? 'We will update this and come back to you before anything goes ahead.'
+                                 : 'No problem at all. Tell us what to adjust and we will rework it before anything goes ahead.')+'</span></div></div>'
+      + '<textarea data-rejwhy="'+id+'" rows="3" placeholder="For example: can we mention the government rebate?">'
       + esc(r.not_approved_reason||'') + '</textarea>'
-      + '<button class="btn" type="button" data-rejsave="'+id+'">Save reason</button>'
-      + '<span class="rejmsg" data-rejmsg="'+id+'"></span>'
+      + '<div class="rjrow"><button class="btn rjsave" type="button" data-rejsave="'+id+'">'
+        + (r.not_approved ? 'Update feedback' : 'Send feedback') + '</button>'
+      + '<button class="btn ghost" type="button" data-rejcancel="'+id+'">'
+        + (r.not_approved ? 'Withdraw, it is fine as is' : 'Cancel') + '</button>'
+      + '<span class="rejmsg" data-rejmsg="'+id+'"></span></div>'
     + '</div>'
     + assignPanel(r, staff)
     // Assignment moved into the Assign panel so there is one place to set it.
@@ -1981,16 +2430,30 @@ function wireMonthBrief(el, t){
     badge('Saved','ok'); refreshMonth(t);
   }));
 
+  el.querySelectorAll('[data-rejcancel]').forEach(b => b.addEventListener('click', async () => {
+    const id = b.dataset.rejcancel;
+    const it = ITEMS.find(r => r.id === id);
+    const cb = el.querySelector('[data-reject="'+id+'"]');
+    if (!it.not_approved) {
+      // Nothing was saved, so nothing to undo in the database.
+      cb.checked = false;
+      el.querySelector('[data-rejwhy="'+id+'"]').value = '';
+      el.querySelector('[data-rejbox="'+id+'"]').classList.add('hide');
+      return;
+    }
+    cb.checked = false; cb.dispatchEvent(new Event('change'));
+  }));
+
   el.querySelectorAll('[data-rejsave]').forEach(b => b.addEventListener('click', async () => {
     const id = b.dataset.rejsave;
     const why = (el.querySelector('[data-rejwhy="'+id+'"]').value || '').trim();
     const msg = el.querySelector('[data-rejmsg="'+id+'"]');
-    if (why.length < 3) { msg.textContent = 'Tell us what needs changing.'; msg.style.color='#ff9d9d'; return; }
-    b.disabled = true; msg.textContent = 'Saving…'; msg.style.color='';
+    if (why.length < 3) { msg.textContent = 'Add a few words so we know what to change.'; msg.className = 'rejmsg err'; return; }
+    b.disabled = true; msg.textContent = 'Saving…'; msg.className = 'rejmsg';
     const { error } = await sb.from('ch_items')
       .update({ not_approved: true, not_approved_reason: why, approved: false }).eq('id', id);
     b.disabled = false;
-    if (error) { msg.textContent = 'Could not save that.'; msg.style.color='#ff9d9d'; return; }
+    if (error) { msg.textContent = 'That did not save. Please try again.'; msg.className = 'rejmsg err'; return; }
     const it = ITEMS.find(r => r.id === id);
     it.not_approved = true; it.not_approved_reason = why; it.approved = false;
     msg.textContent = 'Saved. We will come back to you on this.';
