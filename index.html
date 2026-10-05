@@ -694,6 +694,8 @@
   .artbody th{background:var(--accent-fill,#17B4F0);color:var(--on-accent,#fff)}
   .artbody blockquote{margin:22px 0;padding:16px 18px;border-radius:10px;background:#f1f6fa;border-left:5px solid var(--accent,#17B4F0)}
   .artbody a{color:var(--accent-ink,#0b6c95)}
+  .artbody blockquote a{display:table;margin-top:12px;background:var(--accent-fill,#17B4F0);color:var(--on-accent,#fff);
+    font-weight:700;text-decoration:none;padding:11px 20px;border-radius:9px}
   .artbody mark.cmark{background:#fff1a8;border-bottom:2px solid #e3b400;cursor:pointer;padding:0 1px;border-radius:2px}
   .artbody mark.cmark.res{background:#eef2f5;border-bottom-color:#b7c3cd}
   .artbody mark.cmark.flash{background:#ffd54d}
@@ -726,6 +728,20 @@
   .cform .as{font-size:12px;color:#6a7886}
   .cform .row button{padding:7px 13px;border-radius:7px;font-weight:600;cursor:pointer;border:1px solid #cfd8e0;background:#fff}
   .cform .row button.go{background:var(--accent-fill,#17B4F0);color:var(--on-accent,#fff);border-color:transparent}
+  .selpop{display:flex;gap:2px;padding:4px}
+  .selpop button{background:transparent;color:#fff;border:0;padding:5px 10px;font:inherit;font-weight:600;cursor:pointer;border-radius:6px}
+  .selpop button:hover{background:rgba(255,255,255,.15)}
+  .selpop button[hidden]{display:none}
+  .eform{width:min(460px,calc(100vw - 24px))}
+  .eform label{display:block;font-size:11.5px;font-weight:700;color:#3d4a57;margin:0 0 4px;text-transform:uppercase;letter-spacing:.05em}
+  .eform textarea{min-height:110px}
+  .eform .ai{display:flex;gap:6px;margin:10px 0 2px}
+  .eform .ai input{flex:1;min-width:0;font:inherit;font-size:13.5px;padding:7px 9px;border:1px solid #cfd8e0;border-radius:8px}
+  .eform .ai button{padding:7px 11px;border-radius:7px;font-weight:600;cursor:pointer;border:1px solid #7c5cd6;background:#f4f0ff;color:#4b2fa8;white-space:nowrap}
+  .eform .ai button:disabled{opacity:.6;cursor:wait}
+  .eform .note{font-size:11.5px;color:#6a7886;margin:5px 0 0;line-height:1.4}
+  .artundo{font-size:12.5px;font-weight:600;padding:5px 10px;border-radius:7px;border:1px solid #cfd8e0;background:#fff;cursor:pointer;white-space:nowrap}
+  .artundo[hidden]{display:none}
   @media screen and (max-width:860px){
     .artwrap{padding:0}
     .artsheet{border-radius:0}
@@ -859,6 +875,42 @@
   .fb .fm{font-size:12.5px;color:var(--muted);margin-top:8px}
   .fb .fgo{white-space:nowrap}
   @media screen and (max-width:640px){ .fb{grid-template-columns:40px minmax(0,1fr)} .fb .fgo{grid-column:2} }
+  /* Publishing: go-live date and the WordPress pack (delivery team). */
+  .golive{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#0f766e;background:#e6f6f3;
+    border:1px solid #b8e3da;border-radius:999px;padding:2px 9px}
+  .schedset{display:inline-flex;align-items:center;gap:7px}
+  .schedset input{font:inherit;font-size:13.5px;padding:4px 8px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .schedset input:disabled{opacity:.5;cursor:not-allowed}
+  .wpbtn{border-color:#21759b!important;color:#21759b!important;font-weight:700}
+  .wpbtn:hover{background:#21759b!important;color:#fff!important}
+  /* Copy HTML window: look before you copy. */
+  .codeseg{margin-left:auto}
+  .arthead .btn{padding:8px 16px;border-radius:9px}
+  .codebody{flex:1;min-height:0;display:flex;background:#eef1f5}
+  .codebody iframe{flex:1;border:0;background:#fff;width:100%;height:100%}
+  .codebody pre{flex:1;margin:0;overflow:auto;padding:18px 20px;background:#0f1218;color:#d6e2f0;font-family:var(--mono);
+    font-size:12.5px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+  .codebody pre[hidden],.codebody iframe[hidden]{display:none}
+  .codefoot{padding:10px 18px;border-top:1px solid #e3e8ee;font-size:12.5px;color:#5d6b79;background:#f7f9fb}
+  @media screen and (max-width:860px){ .codeseg{margin-left:0} .arthead{flex-wrap:wrap} }
+  /* Blog pipeline: stage chip on the card and the QC row (staff). */
+  .bstage{display:inline-flex;align-items:center;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;border:1px solid}
+  .bstage.b-writing{color:#7c5cd6;background:#f3effc;border-color:#ddd3f5}
+  .bstage.b-qc{color:#b45309;background:#fff5e6;border-color:#f4d6a6}
+  .bstage.b-changes{color:#b42318;background:#fdecec;border-color:#f3c2c2}
+  .bstage.b-ready{color:#0f766e;background:#e6f6f3;border-color:#b8e3da}
+  .bstage.b-client{color:#0a6a93;background:#eaf7fe;border-color:#bfe6f8}
+  .qcrow{flex-basis:100%;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin-top:10px;padding:12px 14px;border-radius:12px;
+    border:1px solid #f4d6a6;background:linear-gradient(135deg,#fffaf2,#fff)}
+  .qcrow.qc-approved{border-color:#b8e3da;background:linear-gradient(135deg,#f1faf7,#fff)}
+  .qcrow.qc-changes{border-color:#f3c2c2;background:linear-gradient(135deg,#fff6f6,#fff)}
+  .qcrow .qctext{flex:1 1 320px;font-size:14px;color:var(--ink)}
+  .qcrow .qcsc{color:var(--muted);font-size:12.5px}
+  .qcrow .qcbtns{display:flex;gap:8px}
+  .qcrow .btn{padding:8px 16px;border-radius:9px}
+  .qcrow .btn.qcok{background:#1c7c54;border-color:#1c7c54;color:#fff}
+  .qcrow .qcbox{flex-basis:100%;display:grid;gap:8px}
+  .qcrow .qcbox textarea{width:100%;font:inherit;font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:9px}
 </style>
 </head>
 <body>
@@ -894,10 +946,24 @@
 </div>
 
 
+<div id="codeModal" class="artwrap" hidden>
+  <div class="artsheet" role="dialog" aria-modal="true" aria-label="WordPress HTML">
+    <div class="arthead"><span class="t" id="codeTitle"></span>
+      <span class="seg codeseg" role="tablist"><button type="button" class="on" data-codeview="preview">Preview</button><button type="button" data-codeview="code">HTML code</button></span>
+      <button class="btn" type="button" id="codeCopy">Copy HTML</button>
+      <button class="artx" type="button" id="codeClose" aria-label="Close">&times;</button></div>
+    <div class="codebody">
+      <iframe id="codeFrame" title="How the post will look in WordPress" sandbox="allow-same-origin"></iframe>
+      <pre id="codeText" hidden></pre>
+    </div>
+    <div class="codefoot">Paste into a WordPress <b>Custom HTML</b> block. Upload the photos first and keep their file names, so they appear in place.</div>
+  </div>
+</div>
 <div id="artModal" class="artwrap" hidden>
   <div class="artsheet" role="dialog" aria-modal="true" aria-label="Read and comment on this article">
     <div class="arthead"><span class="t" id="artTitle"></span>
       <span class="hint">Highlight any text to leave a comment</span>
+      <button class="artundo" type="button" id="artUndo" hidden>Undo last edit</button>
       <button class="artx" type="button" id="artClose" aria-label="Close">&times;</button></div>
     <div class="artmain">
       <article class="artbody" id="artBody"></article>
@@ -907,12 +973,21 @@
     </div>
   </div>
 </div>
-<button class="selpop" id="selPop" type="button" hidden>&#128172; Comment</button>
+<div class="selpop" id="selPop" hidden><button type="button" id="selComment">&#128172; Comment</button><button type="button" id="selEdit" hidden>&#9998; Suggest edit</button></div>
 <div class="cform" id="cForm" hidden>
   <p class="q" id="cQuote"></p>
   <textarea id="cBody" placeholder="What should we change?"></textarea>
   <div class="row"><span class="as" id="cAs"></span>
     <span><button type="button" id="cCancel">Cancel</button> <button type="button" class="go" id="cSave">Save comment</button></span></div>
+</div>
+<div class="cform eform" id="eForm" hidden>
+  <p class="q" id="eQuote"></p>
+  <label for="eNew">Replace with</label>
+  <textarea id="eNew"></textarea>
+  <div class="ai"><input id="eAsk" maxlength="600" placeholder="Or tell AI what to change, e.g. make it shorter"><button type="button" id="eAI">Suggest with AI</button></div>
+  <p class="note">AI keeps to the client's voice, facts and service areas. Read the wording before you apply it. Every edit is in the change log and can be undone.</p>
+  <div class="row"><span class="as" id="eAs"></span>
+    <span><button type="button" id="eCancel">Cancel</button> <button type="button" class="go" id="eApply">Apply edit</button></span></div>
 </div>
 
 <div id="appView" class="hide">
@@ -1153,7 +1228,7 @@ let ARTICLES = {}, OPENCOMMENTS = {}, ART = null, ARTCOMMENTS = [], PENDINGSEL =
 
 async function loadArticleIndex(){
   const [a, c] = await Promise.all([
-    sb.from('ch_item_articles').select('item_id,version,updated_at').eq('client_id', CLIENT_ID),
+    sb.from('ch_item_articles').select('item_id,version,updated_at,qc_status,qc_name,qc_at,qc_note,released_at,scores').eq('client_id', CLIENT_ID),
     sb.from('ch_item_comments').select('item_id,status').eq('client_id', CLIENT_ID)
   ]);
   ARTICLES = {}; OPENCOMMENTS = {};
@@ -1165,23 +1240,30 @@ const cWhen = t => { const d = new Date(t);
   return d.toLocaleDateString('en-AU', {day:'2-digit', month:'2-digit', year:'numeric'}) + ' '
        + d.toLocaleTimeString('en-AU', {hour:'numeric', minute:'2-digit'}); };
 
-async function openArticle(itemId){
+async function openArticle(itemId, keepScroll){
   const r = ITEMS.find(x => x.id === itemId);
+  const prevScroll = keepScroll ? $('artBody').scrollTop : 0;
   const { data, error } = await sb.from('ch_item_articles').select('item_id,html,version,updated_at')
     .eq('item_id', itemId).maybeSingle();
   if (error || !data) { badge('Could not open the article.','err'); return; }
-  ART = { id: itemId, title: r ? r.title : '' };
+  ART = { id: itemId, title: r ? r.title : '', html: data.html, version: data.version };
   $('artTitle').textContent = ART.title;
   $('artBody').innerHTML = data.html;
   $('artBody').querySelectorAll('a[href^="http"]').forEach(x => { x.target = '_blank'; x.rel = 'noopener'; });
   $('artModal').hidden = false; document.body.style.overflow = 'hidden';
-  $('artBody').scrollTop = 0;
+  $('artBody').scrollTop = prevScroll;
+  $('artUndo').hidden = true;
+  if (ME.kind === 'internal') {
+    document.querySelector('.arthead .hint').textContent = 'Highlight any text to comment or edit it';
+    sb.from('ch_item_article_versions').select('id', {count:'exact', head:true}).eq('item_id', itemId)
+      .then(({ count }) => { if (ART && ART.id === itemId) $('artUndo').hidden = !count; });
+  }
   await loadComments();
 }
 
 function closeArticle(){
   $('artModal').hidden = true; document.body.style.overflow = '';
-  hideSel(); $('cForm').hidden = true; ART = null;
+  hideSel(); $('cForm').hidden = true; $('eForm').hidden = true; ART = null;
   loadArticleIndex().then(updateReadBadges);
 }
 
@@ -1319,17 +1401,19 @@ function captureSelection(){
   }
   const rect = range.getBoundingClientRect();
   const pop = $('selPop');
+  $('selEdit').hidden = ME.kind !== 'internal';
   pop.hidden = false;
-  pop.style.top = Math.max(8, rect.top - 44) + 'px';
-  pop.style.left = Math.min(window.innerWidth - 130, Math.max(8, rect.left + rect.width / 2 - 55)) + 'px';
+  const pw = pop.offsetWidth;
+  pop.style.top = Math.max(8, rect.top - 48) + 'px';
+  pop.style.left = Math.min(window.innerWidth - pw - 8, Math.max(8, rect.left + rect.width / 2 - pw / 2)) + 'px';
 }
 
-const inPopup = e => e.target instanceof Element && !!e.target.closest('#selPop,#cForm');
+const inPopup = e => e.target instanceof Element && !!e.target.closest('#selPop,#cForm,#eForm');
 document.addEventListener('mouseup', e => { if (!inPopup(e)) setTimeout(captureSelection, 10); });
 document.addEventListener('touchend', e => { if (!inPopup(e)) setTimeout(captureSelection, 250); });
 $('artBody').addEventListener('scroll', hideSel);
 
-$('selPop').addEventListener('click', e => {
+$('selComment').addEventListener('click', e => {
   e.stopPropagation();
   if (!PENDINGSEL) return;
   const pop = $('selPop').getBoundingClientRect();
@@ -1339,7 +1423,7 @@ $('selPop').addEventListener('click', e => {
   $('cAs').textContent = 'Signed as ' + (ME && ME.name ? ME.name : 'you');
   const f = $('cForm'); f.hidden = false;
   const w = f.offsetWidth, h = f.offsetHeight;
-  f.style.left = Math.min(window.innerWidth - w - 12, Math.max(12, pop.left - w / 2 + 55)) + 'px';
+  f.style.left = Math.min(window.innerWidth - w - 12, Math.max(12, pop.left + pop.width / 2 - w / 2)) + 'px';
   f.style.top = Math.min(window.innerHeight - h - 12, Math.max(12, pop.bottom + 8)) + 'px';
   $('cBody').focus();
 });
@@ -1355,12 +1439,102 @@ $('cSave').addEventListener('click', async () => {
   $('cForm').hidden = true; PENDINGSEL = null; window.getSelection().removeAllRanges();
   badge('Comment saved','ok'); loadComments();
 });
+/* ---------- Suggest edit (R2R staff only) ----------
+   The edit is made on a fresh copy of the saved HTML (not the on-screen copy, which carries
+   comment marks and new-tab link attributes), located by the same quote + context the
+   comments use, and saved with the version it started from so a newer save is never
+   overwritten. One paragraph, heading or list item at a time keeps the structure intact. */
+let EDIT_AI = false;
+function selectionContext(){
+  const { text } = textIndex($('artBody'));
+  const i = locate(text, PENDINGSEL);
+  if (i < 0) return { before:'', after:'' };
+  const e = i + PENDINGSEL.quote.length;
+  return { before: text.slice(Math.max(0, i - 600), i), after: text.slice(e, e + 600) };
+}
+function replaceInHtml(html, sel){
+  const box = document.createElement('div'); box.innerHTML = html;
+  const { nodes, text } = textIndex(box);
+  const start = locate(text, sel);
+  if (start < 0) return { err: 'That passage has changed since you opened the article. Close it, reopen it and try again.' };
+  const end = start + sel.quote.length;
+  const s = nodes.find(x => start < x.start + x.n.nodeValue.length);
+  const e = nodes.find(x => end <= x.start + x.n.nodeValue.length);
+  if (!s || !e) return { err: 'Could not find that passage. Close the article, reopen it and try again.' };
+  const BLOCK = 'p,li,h2,h3,h4,td,th,figcaption,dd,dt';
+  const bs = s.n.parentElement.closest(BLOCK), be = e.n.parentElement.closest(BLOCK);
+  if (!bs || bs !== be) return { err: 'Edit one paragraph, heading or list item at a time.' };
+  const r = document.createRange(); r.setStart(s.n, start - s.start); r.setEnd(e.n, end - e.start);
+  const hasLink = !!r.cloneContents().querySelector('a') || s.n.parentElement.closest('a') !== e.n.parentElement.closest('a');
+  return { box, r, hasLink };
+}
+$('selEdit').addEventListener('click', e => {
+  e.stopPropagation();
+  if (!PENDINGSEL || ME.kind !== 'internal') return;
+  const pop = $('selPop').getBoundingClientRect();
+  hideSel();
+  EDIT_AI = false;
+  $('eQuote').textContent = PENDINGSEL.quote;
+  $('eNew').value = PENDINGSEL.quote;
+  $('eAsk').value = '';
+  $('eAs').textContent = 'Editing as ' + (ME && ME.name ? ME.name : 'you');
+  const f = $('eForm'); f.hidden = false;
+  const w = f.offsetWidth, h = f.offsetHeight;
+  f.style.left = Math.min(window.innerWidth - w - 12, Math.max(12, pop.left + pop.width / 2 - w / 2)) + 'px';
+  f.style.top = Math.min(window.innerHeight - h - 12, Math.max(12, pop.bottom + 8)) + 'px';
+  $('eNew').focus(); $('eNew').select();
+});
+$('eCancel').addEventListener('click', () => { $('eForm').hidden = true; PENDINGSEL = null; });
+$('eAsk').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('eAI').click(); } });
+$('eAI').addEventListener('click', async () => {
+  const ask = $('eAsk').value.trim();
+  if (!ask) { $('eAsk').focus(); return; }
+  if (!PENDINGSEL) return;
+  const { data:{ session } } = await sb.auth.getSession();
+  if (!session) { badge('Please sign in again.','err'); return; }
+  const ctx = selectionContext();
+  $('eAI').disabled = true; $('eAI').textContent = 'Thinking…';
+  try {
+    const r = await fetch(CFG.sbUrl + '/functions/v1/article-suggest', { method:'POST',
+      headers: { 'Content-Type':'application/json', apikey: CFG.sbKey, Authorization: 'Bearer ' + session.access_token },
+      body: JSON.stringify({ item_id: ART.id, quote: PENDINGSEL.quote, instruction: ask, before: ctx.before, after: ctx.after }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.text) { badge(j.error || 'The AI could not answer just now.','err'); return; }
+    $('eNew').value = j.text; EDIT_AI = true; $('eNew').focus();
+  } catch (err) { badge('Could not reach the AI just now.','err'); }
+  finally { $('eAI').disabled = false; $('eAI').textContent = 'Suggest with AI'; }
+});
+$('eApply').addEventListener('click', async () => {
+  if (!PENDINGSEL || !ART) return;
+  const repl = $('eNew').value.replace(/\s+/g, ' ').trim();
+  if (!repl) { badge('Type the new wording, or press Cancel.','err'); $('eNew').focus(); return; }
+  if (repl === PENDINGSEL.quote) { $('eForm').hidden = true; return; }
+  const out = replaceInHtml(ART.html, PENDINGSEL);
+  if (out.err) { badge(out.err,'err'); return; }
+  if (out.hasLink && !confirm('This passage contains a link. Applying the edit removes that link. Continue?')) return;
+  out.r.deleteContents(); out.r.insertNode(document.createTextNode(repl)); out.box.normalize();
+  $('eApply').disabled = true;
+  const { data, error } = await sb.rpc('ch_edit_article', { p_item_id: ART.id, p_html: out.box.innerHTML,
+    p_base_version: ART.version, p_old: PENDINGSEL.quote, p_new: repl, p_ai: EDIT_AI });
+  $('eApply').disabled = false;
+  if (error) { badge(error.message || 'Could not save the edit.','err'); return; }
+  $('eForm').hidden = true; PENDINGSEL = null; window.getSelection().removeAllRanges();
+  badge('Edit applied (version ' + data + ')','ok');
+  openArticle(ART.id, true);
+});
+$('artUndo').addEventListener('click', async () => {
+  if (!ART || !confirm('Undo the last change to this article?')) return;
+  const { error } = await sb.rpc('ch_undo_article_edit', { p_item_id: ART.id });
+  if (error) { badge(error.message || 'Could not undo.','err'); return; }
+  badge('Last change undone','ok'); openArticle(ART.id, true);
+});
 $('artShowRes').addEventListener('change', () => { paintMarks(); paintComments(); });
 $('artClose').addEventListener('click', closeArticle);
 $('artModal').addEventListener('click', e => { if (e.target.id === 'artModal') closeArticle(); });
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
   if (!$('cForm').hidden) { $('cForm').hidden = true; return; }
+  if (!$('eForm').hidden) { $('eForm').hidden = true; return; }
   if (!$('artModal').hidden) closeArticle();
 });
 
@@ -1777,6 +1951,364 @@ async function wireFeedback(el){
   paint();
 }
 
+/* ---------------- WordPress pack (delivery team) ----------------
+   Jose 04/10/2026. One zip per blog: post-body.html in WordPress block markup (paste into
+   the Code editor and every heading, list, table, photo and button arrives as a proper
+   block), the photos as files, the SEO fields, and the schema. Built in the browser from
+   the saved article, so it is always the latest approved version. */
+function wpEsc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function wpBlocks(root, files){
+  const out = [];
+  const inner = el => el.innerHTML.trim();
+  [...root.children].forEach(el => {
+    const tag = el.tagName.toLowerCase();
+    if (tag === 'h2' || tag === 'h3' || tag === 'h4') {
+      const lvl = +tag[1];
+      out.push('<!-- wp:heading' + (lvl === 2 ? '' : ' {"level":' + lvl + '}') + ' -->\n<' + tag + ' class="wp-block-heading">' + inner(el) + '</' + tag + '>\n<!-- /wp:heading -->');
+    } else if (tag === 'p') {
+      const img = el.querySelector('img');
+      if (img && el.textContent.trim() === '') { out.push(wpImage(img, '', files)); return; }
+      out.push('<!-- wp:paragraph -->\n<p>' + inner(el) + '</p>\n<!-- /wp:paragraph -->');
+    } else if (tag === 'figure' && el.querySelector('img')) {
+      const cap = el.querySelector('figcaption');
+      out.push(wpImage(el.querySelector('img'), cap ? cap.innerHTML : '', files));
+    } else if (tag === 'img') {
+      out.push(wpImage(el, '', files));
+    } else if (tag === 'ul' || tag === 'ol') {
+      const items = [...el.children].map(li => '<!-- wp:list-item -->\n<li>' + li.innerHTML.trim() + '</li>\n<!-- /wp:list-item -->').join('\n');
+      out.push('<!-- wp:list' + (tag === 'ol' ? ' {"ordered":true}' : '') + ' -->\n<' + tag + ' class="wp-block-list">' + items + '</' + tag + '>\n<!-- /wp:list -->');
+    } else if (tag === 'table' || el.querySelector('table')) {
+      const tb = tag === 'table' ? el : el.querySelector('table');
+      out.push('<!-- wp:table -->\n<figure class="wp-block-table"><table class="has-fixed-layout">' + tb.innerHTML.trim().replace(/>\s+</g, '><') + '</table></figure>\n<!-- /wp:table -->');
+    } else if (tag === 'blockquote') {
+      // Our call-to-action boxes: text plus a button.
+      const a = el.querySelector('a');
+      const text = el.cloneNode(true); if (text.querySelector('a')) text.querySelector('a').remove();
+      out.push('<!-- wp:group {"className":"r2r-cta","layout":{"type":"constrained"}} -->\n<div class="wp-block-group r2r-cta">'
+        + '<!-- wp:paragraph -->\n<p>' + text.textContent.trim().replace(/^(Need us to check it out\?)/, '<strong>$1</strong>') + '</p>\n<!-- /wp:paragraph -->'
+        + (a ? '\n\n<!-- wp:buttons -->\n<div class="wp-block-buttons"><!-- wp:button -->\n<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="'
+               + wpEsc(a.getAttribute('href')) + '">' + wpEsc(a.textContent.trim()) + '</a></div>\n<!-- /wp:button --></div>\n<!-- /wp:buttons -->' : '')
+        + '</div>\n<!-- /wp:group -->');
+    } else {
+      out.push('<!-- wp:html -->\n' + el.outerHTML + '\n<!-- /wp:html -->');
+    }
+  });
+  return out.join('\n\n');
+}
+
+function wpImage(img, caption, files){
+  const name = files.next(img);
+  return '<!-- wp:image {"sizeSlug":"large"} -->\n<figure class="wp-block-image size-large"><img src="images/' + wpEsc(name) + '" alt="' + wpEsc(img.getAttribute('alt') || '') + '"/>'
+    + (caption ? '<figcaption class="wp-element-caption">' + caption + '</figcaption>' : '') + '</figure>\n<!-- /wp:image -->';
+}
+
+async function loadJsZip(){
+  if (window.JSZip) return window.JSZip;
+  await new Promise((ok, bad) => { const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'; s.onload = ok; s.onerror = bad; document.head.appendChild(s); });
+  return window.JSZip;
+}
+
+/* One block of HTML that looks exactly like the client preview: its own scoped styles,
+   photos pointing at the WordPress uploads folder, FAQ schema at the end. For a Custom
+   HTML block, so nobody has to rebuild the table or the call-to-action boxes by hand. */
+function wpStyledHtml(doc, meta){
+  const cs = getComputedStyle(document.documentElement);
+  const accent = (cs.getPropertyValue('--accent-fill') || '#17B4F0').trim() || '#17B4F0';
+  const onAccent = (cs.getPropertyValue('--on-accent') || '#fff').trim() || '#fff';
+  const edge = (cs.getPropertyValue('--accent') || accent).trim() || accent;
+  const c = doc.cloneNode(true);
+  c.querySelectorAll('img').forEach(img => {
+    img.setAttribute('src', '/wp-content/uploads/' + (img.dataset.wpname || ''));
+    img.removeAttribute('data-wpname'); img.setAttribute('loading', 'lazy');
+  });
+  c.querySelectorAll('table').forEach(t => { const w = document.createElement('div'); w.className = 'r2r-table'; t.replaceWith(w); w.appendChild(t); });
+  c.querySelectorAll('blockquote').forEach(q => {
+    const d = document.createElement('div'); d.className = 'r2r-cta'; d.innerHTML = q.innerHTML;
+    d.querySelectorAll('a').forEach(a => a.className = 'r2r-btn'); q.replaceWith(d);
+  });
+  // External sources open in a new tab; the client's own pages stay in the same tab.
+  c.querySelectorAll('a[href^="http"]').forEach(a => { if (!meta.site || a.href.indexOf(meta.site) !== 0) { a.target = '_blank'; a.rel = 'noopener'; } });
+  const css = '.r2r-post{font-size:17px;line-height:1.72}'
+    + '.r2r-post h2{font-size:1.5em;line-height:1.25;margin:1.6em 0 .5em}'
+    + '.r2r-post h3{font-size:1.18em;line-height:1.3;margin:1.3em 0 .4em}'
+    + '.r2r-post figure{margin:24px 0}'
+    + '.r2r-post img{max-width:100%;height:auto;border-radius:10px;display:block}'
+    + '.r2r-post figcaption{font-size:13px;color:#6a7886;margin-top:6px}'
+    + '.r2r-post .r2r-table{overflow-x:auto;margin:20px 0}'
+    + '.r2r-post table{border-collapse:collapse;width:100%;font-size:15px;margin:0}'
+    + '.r2r-post th,.r2r-post td{border:1px solid #dfe5eb;padding:9px 11px;text-align:left;vertical-align:top}'
+    + '.r2r-post th{background:' + accent + ';color:' + onAccent + '}'
+    + '.r2r-post .r2r-cta{margin:24px 0;padding:18px 20px;border-radius:10px;background:#f1f6fa;border-left:5px solid ' + edge + '}'
+    + '.r2r-post .r2r-cta p{margin:0}'
+    + '.r2r-post .r2r-btn{display:table;margin-top:12px;background:' + accent + ';color:' + onAccent + ';font-weight:700;text-decoration:none;padding:11px 20px;border-radius:9px}'
+    + '.r2r-post .r2r-btn:hover{opacity:.92}'
+    // The theme's title is hidden on posts because the hero image shows it; this keeps one H1
+    // in the page for Google and screen readers without showing the title twice.
+    + '.r2r-post .r2r-h1{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}';
+  const faqs = articleFaqs(c, meta);
+  const faq = faqs.length ? '\n<script type="application/ld+json">\n' + JSON.stringify({ '@context':'https://schema.org', '@type':'FAQPage',
+    mainEntity: faqs.map(f => ({ '@type':'Question', name:f.q, acceptedAnswer:{ '@type':'Answer', text:f.a } })) }, null, 2) + '\n<\/script>' : '';
+  return '<!-- ' + (meta.title || 'Blog post') + ' | content hub version ' + (meta.version || '') + ' -->\n'
+    + '<style>' + css + '<\/style>\n<div class="r2r-post">\n<h1 class="r2r-h1">' + wpEsc(meta.title || '') + '</h1>\n' + c.innerHTML.trim() + '\n</div>' + faq;
+}
+
+let CODEHTML = '', CODEITEM = null;
+
+/* ---------------- blog pipeline: writing, QC, monthly release ----------------
+   Jose 04/10/2026. A blog topic approval queues the cloud writer; Janice or Jhen QC the
+   draft here; on the 15th QC-approved blogs in the client's open months are released and
+   the client is emailed. Clients only ever see a released article. */
+function blogStage(r){
+  if (r.stream !== 'blog') return null;
+  const a = ARTICLES[r.id];
+  if (ME.kind !== 'internal') {
+    if (a) return null;                                    // released: Read & comment shows instead
+    if (r.review_on) return { cls:'b-ready', label:'Ready for you on ' + ausDate(r.review_on) };
+    if (r.topic_approved && !r.approved) return { cls:'b-writing', label:'Being written' };
+    return null;
+  }
+  if (!a) return r.topic_approved && !r.approved ? { cls:'b-writing', label:'Writing' } : null;
+  if (a.released_at) return { cls:'b-client', label:'With the client' };
+  if (a.qc_status === 'approved') return { cls:'b-ready', label:'QC approved · releases ' + ausDate(r.review_on) };
+  if (a.qc_status === 'changes') return { cls:'b-changes', label:'Sent back for changes' };
+  return { cls:'b-qc', label:'Ready for QC' };
+}
+
+function qcPanel(r, staff){
+  const a = ARTICLES[r.id];
+  if (!staff || r.stream !== 'blog' || !a || a.released_at) return '';
+  const id = esc(r.id);
+  const sc = a.scores || {};
+  const scores = (sc.seo || sc.ai_search) ? ' · Surfer SEO ' + esc(sc.seo ?? '?') + ', AI search ' + esc(sc.ai_search ?? '?') : '';
+  let state;
+  if (a.qc_status === 'approved') state = 'QC approved by <b>' + esc(a.qc_name || '') + '</b>. Goes to the client on <b>' + esc(ausDate(r.review_on)) + '</b>.';
+  else if (a.qc_status === 'changes') state = 'Sent back by <b>' + esc(a.qc_name || '') + '</b>: “' + esc(a.qc_note || '') + '”. The writer is revising it.';
+  else state = '<b>Ready for QC.</b> Read it, then approve it for the next client release or send it back.';
+  const can = ME.admin === true;
+  return '<div class="qcrow qc-' + esc(a.qc_status) + '"><div class="qctext">' + state + '<span class="qcsc">' + scores + '</span></div>'
+    + (can && a.qc_status !== 'approved'
+        ? '<div class="qcbtns"><button class="btn qcok" type="button" data-qcok="' + id + '">QC approve</button>'
+          + '<button class="btn ghost" type="button" data-qcback="' + id + '">Send back</button></div>'
+        : (can ? '<div class="qcbtns"><button class="btn ghost" type="button" data-qcback="' + id + '">Send back</button></div>' : ''))
+    + '<div class="qcbox hide" data-qcbox="' + id + '"><textarea data-qcnote="' + id + '" rows="2" placeholder="What should the writer change?"></textarea>'
+    + '<div><button class="btn" type="button" data-qcsend="' + id + '">Send back</button> <button class="btn ghost" type="button" data-qccancel="' + id + '">Cancel</button></div></div>'
+    + '</div>';
+}
+
+// Photos saved in the hub's blog-media store are fetched and embedded so the pack zips them.
+async function inlineRemoteImages(doc){
+  await Promise.all([...doc.querySelectorAll('img[src^="http"]')].map(async img => {
+    try {
+      const r = await fetch(img.getAttribute('src')); if (!r.ok) return;
+      const b = await r.blob();
+      const data = await new Promise(ok => { const fr = new FileReader(); fr.onload = () => ok(fr.result); fr.readAsDataURL(b); });
+      img.setAttribute('src', String(data).replace(/^data:[^;]+;/, 'data:image/jpeg;'));
+    } catch (e) {}
+  }));
+}
+
+async function copyWpHtml(itemId, btn){
+  if (btn) btn.disabled = true; badge('Preparing the HTML…');
+  try {
+    const { data: art, error } = await sb.from('ch_item_articles').select('html,meta,version').eq('item_id', itemId).maybeSingle();
+    if (error || !art) throw new Error('no article');
+    const meta = Object.assign({}, art.meta || {}, { version: art.version });
+    const doc = document.createElement('div'); doc.innerHTML = art.html;
+    let heroSrc = '';
+    if (doc.firstElementChild && doc.firstElementChild.tagName === 'IMG') { heroSrc = doc.firstElementChild.getAttribute('src'); doc.firstElementChild.remove(); }
+    doc.querySelectorAll('h1').forEach(h => h.remove());
+    const names = (meta.images || []).map(i => i.file.replace(/\.(png|jpe?g)$/i, '.jpg'));
+    const srcByName = {};
+    let n = 0; doc.querySelectorAll('img').forEach(img => {
+      const nm = names[n++] || ((meta.slug || 'image') + '-' + n + '.jpg');
+      img.dataset.wpname = nm; srcByName[nm] = img.getAttribute('src'); });
+    CODEHTML = wpStyledHtml(doc, meta); CODEITEM = { id: itemId, version: art.version };
+    // Preview: the same code, with the photos shown from the hub until they are uploaded to WordPress.
+    let shown = CODEHTML;
+    Object.keys(srcByName).forEach(nm => { shown = shown.split('/wp-content/uploads/' + nm).join(srcByName[nm]); });
+    const r = ITEMS.find(x => x.id === itemId) || {};
+    $('codeFrame').srcdoc = '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+      + '<style>body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#222;background:#fff}'
+      + '.wpnote{background:#f3f4f6;color:#6b7280;font-size:12px;text-align:center;padding:7px}'
+      + '.entry{max-width:780px;margin:0 auto;padding:28px 20px 60px}.entry h1{font-size:34px;line-height:1.15;margin:0 0 18px}'
+      + '.featured{width:100%;border-radius:6px;display:block;margin:0 0 24px}</style></head><body>'
+      + '<div class="wpnote">Preview: the theme shows the featured image, with its post title hidden. Fonts and width come from your theme.</div>'
+      + '<main class="entry">'
+      + (heroSrc ? '<img class="featured" src="' + heroSrc + '" alt="">' : '') + shown + '</main></body></html>';
+    $('codeText').textContent = CODEHTML;
+    $('codeTitle').textContent = (meta.title || r.title || 'Post') + ' · WordPress HTML';
+    setCodeView('preview');
+    $('codeModal').hidden = false; document.body.style.overflow = 'hidden';
+    badge('', '');
+  } catch (e) {
+    badge('Could not prepare the HTML.','err');
+  } finally { if (btn) btn.disabled = false; }
+}
+
+function setCodeView(v){
+  document.querySelectorAll('[data-codeview]').forEach(b => b.classList.toggle('on', b.dataset.codeview === v));
+  $('codeFrame').hidden = v !== 'preview'; $('codeText').hidden = v !== 'code';
+}
+document.querySelectorAll('[data-codeview]').forEach(b => b.addEventListener('click', () => setCodeView(b.dataset.codeview)));
+$('codeCopy').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(CODEHTML); }
+  catch (e) { setCodeView('code'); const r = document.createRange(); r.selectNodeContents($('codeText'));
+    const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); badge('Press Cmd+C to copy the selected code.','err'); return; }
+  $('codeCopy').textContent = 'Copied ✓'; setTimeout(() => { $('codeCopy').textContent = 'Copy HTML'; }, 1800);
+  if (CODEITEM) sb.rpc('ch_log_team_event', { p_item_id: CODEITEM.id, p_kind: 'pack_downloaded', p_detail: { version: CODEITEM.version, how: 'copied HTML' } });
+  badge('HTML copied. Paste it into a Custom HTML block.','ok');
+});
+function closeCode(){ $('codeModal').hidden = true; document.body.style.overflow = ''; }
+$('codeClose').addEventListener('click', closeCode);
+$('codeModal').addEventListener('click', e => { if (e.target.id === 'codeModal') closeCode(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('codeModal').hidden) closeCode(); });
+
+/* FAQ schema is read from the article as it stands (the H3s under the FAQs H2), so an edit made
+   on the hub after the writer saved it reaches the schema too. The writer's meta.faqs is only a
+   fallback for an article with no FAQ section in that shape. */
+function articleFaqs(root, meta){
+  const h2 = [...root.querySelectorAll('h2')].find(h => /faq|frequently asked/i.test(h.textContent));
+  const out = [];
+  if (h2) {
+    let cur = null;
+    for (let el = h2.nextElementSibling; el && el.tagName !== 'H2'; el = el.nextElementSibling) {
+      if (el.tagName === 'H3') { cur = { q: el.textContent.trim(), a: '' }; out.push(cur); }
+      else if (cur && !el.matches('figure,img,blockquote')) cur.a = (cur.a + ' ' + el.textContent).replace(/\s+/g, ' ').trim();
+    }
+  }
+  const found = out.filter(f => f.q && f.a);
+  return found.length ? found : (meta.faqs || []);
+}
+
+async function buildWpPack(itemId, btn){
+  const r = ITEMS.find(x => x.id === itemId);
+  if (btn) btn.disabled = true; badge('Building the WordPress pack…');
+  try {
+    const [{ data: art, error }, JSZip] = await Promise.all([
+      sb.from('ch_item_articles').select('html,meta,version').eq('item_id', itemId).maybeSingle(), loadJsZip()]);
+    if (error || !art) throw new Error('no article');
+    const meta = art.meta || {};
+    const doc = document.createElement('div'); doc.innerHTML = art.html;
+    await inlineRemoteImages(doc);
+    const zip = new JSZip(), imgDir = zip.folder('images');
+    // Photos: the hero becomes the featured image; the rest keep their brief names.
+    const names = (meta.images || []).map(i => i.file);
+    let n = 0;
+    const save = (img, name) => {
+      const m = /^data:image\/(\w+);base64,(.*)$/.exec(img.getAttribute('src') || '');
+      if (m) imgDir.file(name.replace(/\.(png|jpe?g)$/i, '') + '.jpg', m[2], { base64: true });
+      return name.replace(/\.(png|jpe?g)$/i, '') + '.jpg';
+    };
+    const first = doc.firstElementChild;
+    let featured = null;
+    if (first && first.tagName === 'IMG') { featured = save(first, meta.hero_file || (meta.slug || 'featured') + '-hero.jpg'); first.remove(); }
+    doc.querySelectorAll('img').forEach(img => { img.dataset.wpname = save(img, names[n++] || ((meta.slug || 'image') + '-' + n + '.jpg')); });
+    const files = { next: img => img.dataset.wpname };
+    doc.querySelectorAll('h1').forEach(h => h.remove());   // WordPress prints the post title as the H1
+    let body = '<!-- wp:html -->\n<h1 style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">'
+      + wpEsc(meta.title || r.title) + '</h1>\n<!-- /wp:html -->\n\n' + wpBlocks(doc, files);
+    const copyHtml = wpStyledHtml(doc, Object.assign({}, meta, { version: art.version }));
+
+    const site = (r.target_url || '').replace(/^(https?:\/\/[^/]+).*$/, '$1');
+    const url = r.target_url || (site + '/blog/' + (meta.slug || '') + '/');
+    const faqs = articleFaqs(doc, meta);
+    const faq = faqs.length ? { '@context':'https://schema.org', '@type':'FAQPage',
+      mainEntity: faqs.map(f => ({ '@type':'Question', name:f.q, acceptedAnswer:{ '@type':'Answer', text:f.a } })) } : null;
+    if (faq) body += '\n\n<!-- wp:html -->\n<script type="application/ld+json">\n' + JSON.stringify(faq, null, 2) + '\n<\/script>\n<!-- /wp:html -->';
+    const authorName = String(meta.author || '').split(',')[0].trim();
+    const posting = { '@context':'https://schema.org', '@type':'BlogPosting', headline: meta.title || r.title,
+      description: meta.meta_description || r.meta_description || '', mainEntityOfPage: url,
+      image: featured ? site + '/wp-content/uploads/' + featured : undefined,
+      author: authorName ? { '@type':'Person', name: authorName, jobTitle: (String(meta.author).split(',')[1] || '').trim() || undefined } : undefined,
+      publisher: { '@type':'Organization', name: CLIENT_NAME, url: site },
+      datePublished: r.scheduled_for || 'YYYY-MM-DD' };
+    const crumbs = { '@context':'https://schema.org', '@type':'BreadcrumbList', itemListElement: [
+      { '@type':'ListItem', position:1, name:'Home', item: site + '/' },
+      { '@type':'ListItem', position:2, name:'Blog', item: site + '/blog/' },
+      { '@type':'ListItem', position:3, name: meta.title || r.title, item: url } ] };
+
+    zip.file('copy-paste-post.html', copyHtml + '\n');
+    zip.file('editable-blocks-version.html', body + '\n');
+    // Plain text, not .html: a browser shows a page of <script> tags as blank, which reads as "empty".
+    const block = (o) => '<script type="application/ld+json">\n' + JSON.stringify(o, null, 2) + '\n<\/script>';
+    zip.file('schema.txt', [
+      'SCHEMA MARKUP for "' + (meta.title || r.title) + '"',
+      'Copy everything between the lines, including the <script> tags.',
+      '',
+      '=== 1. FAQ SCHEMA: always add =====================================',
+      'Already included at the end of copy-paste-post.html. Only paste this separately if you',
+      'publish with the editable blocks version, into a Custom HTML block at the end of the post.',
+      '',
+      faq ? block(faq) : '(this post has no FAQ section)',
+      '',
+      '=== 2. ARTICLE (BlogPosting) SCHEMA ==============================',
+      'ONLY if the site has no SEO plugin. Rank Math and Yoast already add this automatically.',
+      'Replace the date with the go-live date if it shows YYYY-MM-DD.',
+      '',
+      block(posting),
+      '',
+      '=== 3. BREADCRUMB SCHEMA ==========================================',
+      'ONLY if the site has no SEO plugin. Rank Math and Yoast add it once breadcrumbs are on.',
+      '',
+      block(crumbs),
+      ''
+    ].join('\n'));
+    const line = (k, v) => k.padEnd(20) + (v || '(not set)') + '\n';
+    zip.file('seo-settings.txt',
+        line('Post title', meta.title || r.title)
+      + line('Slug', meta.slug) + line('Full URL', url)
+      + line('Meta title', meta.meta_title ? meta.meta_title + '  (' + meta.meta_title.length + ' characters)' : '')
+      + line('Meta description', (meta.meta_description || r.meta_description) ? (meta.meta_description || r.meta_description) + '  (' + (meta.meta_description || r.meta_description).length + ' characters)' : '')
+      + line('Focus keyword', meta.keyword || r.main_keyword) + line('Category', meta.category) + line('Author', meta.author)
+      + line('Go-live date', r.scheduled_for ? ausDate(r.scheduled_for) : 'not scheduled yet, set it in the hub')
+      + line('Featured image', featured ? featured + '   alt: ' + (meta.hero_alt || meta.title || r.title) : '')
+      + '\nPhotos in the post (alt text is already in post-body.html):\n'
+      + (meta.images || []).map(i => '  ' + i.file.replace(/\.(png|jpe?g)$/i, '.jpg') + '   alt: ' + i.alt).join('\n') + '\n'
+      + '\nArticle version ' + art.version + ' from the ' + CLIENT_NAME + ' content hub.\n');
+    zip.file('HOW-TO-PUBLISH.txt', [
+      'Publishing "' + (meta.title || r.title) + '" in WordPress',
+      '',
+      'ONE-TIME SETUP (per website):',
+      ' a) Settings > Media > untick "Organise my uploads into month- and year-based folders" and save.',
+      '    The HTML points at /wp-content/uploads/<file name>.',
+      ' b) Hide the post title on single blog posts in the theme settings (the hero image already shows it).',
+      '    Astra: Customise > Blog > Single Post > untick Title. Kadence: Customise > Posts/Pages Layout >',
+      '    Single Post > Post Title off. GeneratePress/Elementor: "Disable title" per post or in the theme.',
+      '    The post code carries its own hidden H1, so the page keeps exactly one H1 for Google.',
+      '',
+      '1. Media > Add New: upload everything in the images folder. Keep the file names exactly as they are.',
+      '2. Posts > Add New. Type the post title (it becomes the page and browser title; the theme hides it on screen).',
+      '3. Add a "Custom HTML" block and paste ALL of copy-paste-post.html (or press Copy HTML in the hub).',
+      '   Preview: it matches the client preview, table, call-to-action boxes and photos included.',
+      '   Prefer normal editable blocks instead? Use the Code editor with editable-blocks-version.html,',
+      '   then click each photo > Replace > Media Library.',
+      '4. The photos fill in once step 1 is done. Their alt text is already in the code.',
+      '5. Set the featured image (Post settings > Featured image) to the hero file.',
+      '6. Permalink: use the slug in seo-settings.txt. Category and author as listed.',
+      '7. SEO plugin box: paste the meta title, meta description and focus keyword from seo-settings.txt.',
+      '   Turn on breadcrumbs in the SEO plugin if they are not already showing on posts.',
+      '   The FAQ schema is already at the end of the code. If you use the SEO plugin FAQ block instead, delete that script.',
+      '8. Schedule the post for the go-live date, then set the same date in the hub so the client and the change log see it.',
+      '',
+      'After it goes live, the post-publish check confirms: page loads, no noindex, canonical correct,',
+      'listed in the sitemap, schema valid, cache cleared, sitemap resubmitted to Google Search Console.',
+      '',
+      'Schema: see schema.txt. Test the live URL at https://search.google.com/test/rich-results'
+    ].join('\n') + '\n');
+    const blob = await zip.generateAsync({ type:'blob' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = (meta.slug || 'blog') + '-wordpress-pack.zip';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    sb.rpc('ch_log_team_event', { p_item_id: itemId, p_kind: 'pack_downloaded', p_detail: { version: art.version } });
+    badge('WordPress pack downloaded','ok');
+  } catch (e) {
+    badge('Could not build the WordPress pack.','err');
+  } finally { if (btn) btn.disabled = false; }
+}
+
 function renderPanel(t){
   const el = $('panel-'+cssId(t.key));
   if (!el) return;
@@ -1850,6 +2382,22 @@ const EVENT_STYLE = {
   release_withdrawn:  { bg:'#8a94a3', icon:'lock' }
 };
 EVENT_LABEL.comment_added = 'commented on the draft';
+Object.assign(EVENT_LABEL, {
+  article_saved:'saved the article', scheduled:'scheduled it to go live', unscheduled:'removed the go-live date',
+  pack_downloaded:'downloaded the WordPress pack', seo_check:'ran the post-publish SEO check',
+  wp_draft_created:'sent it to WordPress as a draft',
+  article_edited:'edited the article', article_restored:'undid the last change to the article',
+  published_email_sent:'emailed the client that the month\'s blogs are live' });
+Object.assign(EVENT_STYLE, {
+  article_saved:    { bg:'#7c5cd6', icon:'doc' },
+  scheduled:        { bg:'#0f766e', icon:'cal' },
+  unscheduled:      { bg:'#8a94a3', icon:'cal' },
+  pack_downloaded:  { bg:'#21759b', icon:'doc' },
+  seo_check:        { bg:'#1c7c54', icon:'check' },
+  wp_draft_created: { bg:'#21759b', icon:'globe' },
+  article_edited:   { bg:'#7c5cd6', icon:'doc' },
+  article_restored: { bg:'#8a94a3', icon:'doc' },
+  published_email_sent: { bg:'#1c7c54', icon:'check' } });
 
 const AV_COLOURS = ['#17B4F0','#7c5cd6','#1c7c54','#e8a33d','#d64545','#0f766e','#c2410c','#4f46e5'];
 function avatar(name, cls){
@@ -1962,9 +2510,15 @@ function eventsMarkup(){
     const who = e.actor_name || 'Someone';
     const extra = e.kind === 'not_approved' && d.reason ? '<div class="quote bad">' + esc(d.reason) + '</div>'
                 : (e.kind === 'note_added' || e.kind === 'comment_added') && d.note
-                  ? '<div class="quote">' + (d.quote ? '<i>“' + esc(d.quote) + '”</i><br>' : '') + esc(d.note) + '</div>' : '';
+                  ? '<div class="quote">' + (d.quote ? '<i>“' + esc(d.quote) + '”</i><br>' : '') + esc(d.note) + '</div>'
+                : e.kind === 'article_edited' && d.new
+                  ? '<div class="quote"><s>' + esc(d.old || '') + '</s><br>' + esc(d.new) + (d.ai ? ' <i>(AI suggestion)</i>' : '') + '</div>' : '';
+    const tail = e.kind === 'scheduled' && d.date ? ' for ' + ausDate(d.date)
+               : (e.kind === 'article_saved' || e.kind === 'article_edited' || e.kind === 'article_restored') && d.version ? ' (version ' + d.version + ')'
+               : e.kind === 'seo_check' && d.summary ? ': ' + d.summary
+               : e.kind === 'pack_downloaded' && d.how ? ' (' + d.how + ')' : '';
     out += '<div class="tev"><span class="tdot" style="background:' + st.bg + '">' + (ICON[st.icon] || '') + '</span>'
-      + '<div><div class="line1"><b>' + esc(who) + '</b> ' + esc(EVENT_LABEL[e.kind] || e.kind) + '</div>'
+      + '<div><div class="line1"><b>' + esc(who) + '</b> ' + esc((EVENT_LABEL[e.kind] || e.kind) + tail) + '</div>'
       + (d.title ? '<span class="item" title="' + esc(d.title) + '">' + esc(d.title) + '</span>' : '')
       + extra + '</div>'
       + '<span class="t">' + timeOnly(e.created_at) + '</span></div>';
@@ -1994,7 +2548,7 @@ function staffMarkup(){
 
 async function loadAdmin(){
   const [ev, ac, st] = await Promise.all([
-    sb.from('ch_item_events').select('*').eq('client_id', CLIENT_ID)
+    sb.from('ch_item_events').select('*').eq('client_id', CLIENT_ID).neq('kind', 'ai_suggested')
       .order('created_at', {ascending:false}).limit(200),
     sb.from('ch_client_actions').select('*').eq('client_id', CLIENT_ID)
       .order('status').order('created_at', {ascending:false}),
@@ -2272,6 +2826,9 @@ function itemCard(r, staff){
   if (fs) facts.push('<span class="stage '+fs+'" style="margin:0">'+fs+'</span>');
   if (r.post_type) facts.push('<span class="ptype" style="margin:0">'+esc(POST_TYPE[r.post_type]||r.post_type)+'</span>');
   facts.push('<span class="sp '+st+'">'+esc(CLIENT_STATUS[r.client_status]||r.client_status)+'</span>');
+  if (r.scheduled_for) facts.push('<span class="golive">Goes live '+esc(ausDate(r.scheduled_for))+'</span>');
+  const blogState = blogStage(r);
+  if (blogState) facts.push('<span class="bstage '+blogState.cls+'">'+esc(blogState.label)+'</span>');
 
   const target = r.stream === 'gbp' && r.target_query
     ? '<span class="target">Targets: <b>'+esc(r.target_query)+'</b></span>'
@@ -2297,6 +2854,9 @@ function itemCard(r, staff){
       + (ARTICLES[r.id]
           ? '<button class="notebtn readbtn" type="button" data-read="'+id+'">Read &amp; comment'
             + (OPENCOMMENTS[r.id] ? '<span class="ccount">'+OPENCOMMENTS[r.id]+'</span>' : '') + '</button>' : '')
+      + (staff && ARTICLES[r.id]
+          ? '<button class="notebtn wpbtn" type="button" data-wppack="'+id+'" title="HTML with headings, photos, SEO details and schema, ready for WordPress">WordPress pack</button>'
+            + '<button class="notebtn wpbtn" type="button" data-wpcopy="'+id+'" title="See the post and its HTML, then copy it for a WordPress Custom HTML block">View &amp; copy HTML</button>' : '')
       + link(r.doc_url, '', 'Draft') + link(r.live_url, 'live', 'Live')
     + '</div></div>'
     + '<div class="ticks">'
@@ -2329,9 +2889,12 @@ function itemCard(r, staff){
     + (staff ? '<div class="staffrow">'
         + '<span>Assigned to <b>'+esc(n.assignee ? PERSON(n.assignee) : 'Unassigned')+'</b></span>'
         + '<span>Status <select data-status="'+id+'">'+statusOpts(r.id)+'</select></span>'
+        + '<span class="schedset" title="'+(r.approved ? 'The date this goes live on the website' : 'Approve the content before scheduling it')+'">Go-live date '
+          + '<input type="date" data-sched="'+id+'" value="'+esc(r.scheduled_for||'')+'"'+(r.approved || r.scheduled_for ? '' : ' disabled')+'></span>'
         + ((n.writer || n.publisher) ? '<span class="owners" style="margin:0;font-size:12px">Write: '+esc(PERSON(n.writer))
             + ' · Publish: '+esc(PERSON(n.publisher))+'</span>' : '')
         + '</div>' : '')
+    + qcPanel(r, staff)
     + '<div class="panel" id="note-'+id+'" hidden><label>Notes on this item</label>'
       + '<textarea class="note" style="width:100%;min-height:80px;font-size:14.5px" data-notefor="'+id+'" placeholder="Anything you want changed before we publish?">'
       + esc(r.client_notes||'')+'</textarea></div>';
@@ -2546,6 +3109,45 @@ function wireMonthBrief(el, t){
   }));
 
   el.querySelectorAll('[data-read]').forEach(b => b.addEventListener('click', () => openArticle(b.dataset.read)));
+  el.querySelectorAll('[data-wppack]').forEach(b => b.addEventListener('click', () => buildWpPack(b.dataset.wppack, b)));
+  el.querySelectorAll('[data-qcok]').forEach(b => b.addEventListener('click', async () => {
+    const id = b.dataset.qcok; b.disabled = true; badge('Saving…');
+    const { data, error } = await sb.rpc('ch_qc_article', { p_item_id: id, p_approve: true, p_note: null });
+    b.disabled = false;
+    if (error) { badge(error.message || 'Could not save QC.','err'); return; }
+    Object.assign(ARTICLES[id], { qc_status:'approved', qc_name: ME.name, qc_at: new Date().toISOString(), qc_note: null });
+    const it = ITEMS.find(x => x.id === id); if (it) it.review_on = data;
+    badge('QC approved. Goes to the client on ' + ausDate(data),'ok'); refreshMonth(t);
+  }));
+  el.querySelectorAll('[data-qcback]').forEach(b => b.addEventListener('click', () => {
+    el.querySelector('[data-qcbox="'+b.dataset.qcback+'"]').classList.remove('hide');
+    el.querySelector('[data-qcnote="'+b.dataset.qcback+'"]').focus();
+  }));
+  el.querySelectorAll('[data-qcsend]').forEach(b => b.addEventListener('click', async () => {
+    const id = b.dataset.qcsend, note = (el.querySelector('[data-qcnote="'+id+'"]').value || '').trim();
+    if (note.length < 3) { badge('Say what needs changing.','err'); return; }
+    b.disabled = true; badge('Saving…');
+    const { error } = await sb.rpc('ch_qc_article', { p_item_id: id, p_approve: false, p_note: note });
+    b.disabled = false;
+    if (error) { badge(error.message || 'Could not save QC.','err'); return; }
+    Object.assign(ARTICLES[id], { qc_status:'changes', qc_name: ME.name, qc_at: new Date().toISOString(), qc_note: note });
+    const it = ITEMS.find(x => x.id === id); if (it) it.review_on = null;
+    badge('Sent back. The writer will revise it.','ok'); refreshMonth(t);
+  }));
+  el.querySelectorAll('[data-qccancel]').forEach(b => b.addEventListener('click', () => {
+    el.querySelector('[data-qcbox="'+b.dataset.qccancel+'"]').classList.add('hide');
+  }));
+  el.querySelectorAll('[data-wpcopy]').forEach(b => b.addEventListener('click', () => copyWpHtml(b.dataset.wpcopy, b)));
+  el.querySelectorAll('[data-sched]').forEach(inp => inp.addEventListener('change', async () => {
+    const id = inp.dataset.sched, it = ITEMS.find(r => r.id === id);
+    badge('Saving…');
+    const { error } = await sb.rpc('ch_set_schedule', { p_item_id: id, p_date: inp.value || null });
+    if (error) { inp.value = it.scheduled_for || ''; badge(/approve/i.test(error.message) ? 'Approve the content first.' : 'Could not save the date.','err'); return; }
+    it.scheduled_for = inp.value || null;
+    if (inp.value && it.client_status !== 'live') it.client_status = 'scheduled';
+    if (!inp.value && it.client_status === 'scheduled') it.client_status = 'approved';
+    badge(inp.value ? 'Scheduled for ' + ausDate(inp.value) : 'Go-live date removed','ok'); refreshMonth(t);
+  }));
 
   // Show a GBP post the way the client will see it on their profile.
   el.querySelectorAll('[data-gbp]').forEach(b => b.addEventListener('click', () => {
