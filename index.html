@@ -2675,6 +2675,9 @@ function monthBriefMarkup(t){
           + '<span class="tc">'+sr.length+' '+(sr.length===1?'item':'items')+'</span></div>';
     if (stream !== 'gbp') { for (const r of sr) body += itemCard(r, staff); continue; }
     // GBP: 3 posts a week, grouped by week so the client can approve a week in one click.
+    // The pill reads wkDone, never !open. An item that is still 'started' is not approvable yet
+    // and is also not approved; treating open===0 as approved told clients 13 unapproved posts
+    // were done while every card still said Approve post (Jose, 05/10/2026).
     const weeks = [...new Set(sr.map(r => weekKey(r.publish_date)))].sort();
     weeks.forEach((wk, i) => {
       const wr = sr.filter(r => weekKey(r.publish_date) === wk);
@@ -2682,7 +2685,8 @@ function monthBriefMarkup(t){
       const wkDone = wr.every(x => x.approved || (isPlanned(x) && x.topic_approved && x.client_status === 'approved'));
       body += '<div class="weekhead'+(wkDone?' w-done':'')+'"><h4>Week '+(i+1)+'</h4><span class="tc">'+wr.length+' posts</span>'
             + (open ? '<button class="btn sm" type="button" data-approveweek="'+esc(wk)+'">Approve all this week</button>'
-                    : '<span class="rag green"><i></i>All approved</span>')
+                    : wkDone ? '<span class="rag green"><i></i>All approved</span>'
+                             : '<span class="rag amber"><i></i>Not ready to approve yet</span>')
             + '</div>';
       body += '<div class="ggrid">';
       for (const r of wr) body += gbpCard(r, staff);
