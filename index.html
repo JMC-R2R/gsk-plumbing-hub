@@ -1914,6 +1914,9 @@ function buildTabs(){
   }
   $('panels').innerHTML = TABLIST.map((t,i) =>
     '<section class="tab-panel'+(i===0?' active':'')+'" id="panel-'+cssId(t.key)+'"></section>').join('');
+  // Rebuilt panels open on the first tab, so drop Reporting's full-width layout too. Switching
+  // Admin/Client view while on Reporting left it on and Strategy ran edge to edge (11/10/2026).
+  document.body.classList.toggle('reporting-on', !!TABLIST[0] && TABLIST[0].key === 'reporting');
   $('tabs').onclick = e => {
     const b = e.target.closest('.tab-btn'); if (b) selectTab(b.dataset.key);
   };
