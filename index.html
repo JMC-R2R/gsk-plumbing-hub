@@ -931,7 +931,10 @@
   .lifeed .lfh b{display:block;font-size:14px}.lifeed .lfh span{font-size:12px;color:#666}
   .lifeed .lft{padding:0 16px 10px;font-size:14px;line-height:1.45;white-space:pre-wrap}
   .lifeed .lft .tg{color:#0a66c2;font-weight:600}
-  .lifeed .lfa{border-top:1px solid #e8e8e8;background:#f3f6f8}
+  .lifeed .lftop{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+  .lifeed .lftop.noimg{display:flex;align-items:center;justify-content:center;background:#f3f6f8;color:#666;font-size:13px}
+  .lifeed .lfa{border-top:1px solid #e8e8e8;background:#f3f6f8;display:flex;align-items:center;justify-content:space-between;gap:12px;padding-right:14px}
+  .lifeed .lfread{white-space:nowrap}
   .lifeed .lfa img{display:block;width:100%}
   .lifeed .lfa .noimg{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:#666;font-size:13px}
   .lifeed .lfa .lfat{padding:10px 16px 12px}.lifeed .lfa .lfat b{display:block;font-size:14px}.lifeed .lfa .lfat span{font-size:12px;color:#666}
@@ -1047,7 +1050,7 @@
         <button class="gbpx" type="button" id="liClose" aria-label="Close">&times;</button>
       </span></div>
     <div class="lifeed" id="liCard"></div>
-    <p class="gbpfoot">LinkedIn shows the first two lines before "see more", so the hook comes first. The article and its banner sit under the post.</p>
+    <p class="gbpfoot">LinkedIn shows the first two lines before "see more", so the hook comes first. The banner leads the post and the article.</p>
   </div>
 </div>
 
@@ -1383,10 +1386,9 @@ async function openArticle(itemId, keepScroll){
 function linkedInReadHtml(r, html){
   const a = ARTICLES[r.id] || {}, m = a.meta || {};
   const staff = ME.kind === 'internal';
-  let out = '';
+  let out = r.banner_url ? '<img class="lix libanner" src="' + esc(r.banner_url) + '" alt="' + esc(m.banner_alt || r.title) + '">' : '';
   if (m.sync_changed && m.sync_note && (staff || a.released_at))
     out += '<div class="lix linote"><b>Updated ' + esc(ausDate(String(m.sync_at || '').slice(0,10))) + ' to match a blog edit.</b> ' + esc(m.sync_note) + '</div>';
-  if (r.banner_url) out += '<img class="lix libanner" src="' + esc(r.banner_url) + '" alt="' + esc(m.banner_alt || r.title) + '">';
   out += '<h1>' + esc(r.title) + '</h1>' + html;
   if (r.post_body) out += '<div class="lix lipromo"><p class="lph">Shared with this post on LinkedIn</p><p>' + esc(r.post_body) + '</p>'
     + (r.post_cta ? '<p>' + esc(r.post_cta) + '</p>' : '')
@@ -2693,11 +2695,15 @@ function openLinkedInPreview(itemId){
   const tags = (r.hashtags || []).map(h => '<span class="tg">#' + esc(String(h).replace(/^#/, '')) + '</span>').join(' ');
   const site = String(CFG.site_url || r.target_url || '').replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '');
   $('liCard').innerHTML =
-      '<div class="lfh"><div class="lfav">' + esc((CLIENT_NAME || '?').slice(0,1)) + '</div><div><b>' + esc(CLIENT_NAME || 'Company page') + '</b>'
+      (r.banner_url ? '<img class="lftop" src="' + esc(r.banner_url) + '" alt="' + esc(((ARTICLES[r.id] || {}).meta || {}).banner_alt || r.title) + '">'
+                    : '<div class="lftop noimg">No banner yet</div>')
+    + '<div class="lfh"><div class="lfav">' + esc((CLIENT_NAME || '?').slice(0,1)) + '</div><div><b>' + esc(CLIENT_NAME || 'Company page') + '</b>'
     + '<span>' + (r.scheduled_for ? 'Goes live ' + esc(ausDate(r.scheduled_for)) : 'Company page post') + '</span></div></div>'
     + '<div class="lft">' + esc(r.post_body || '') + (r.post_cta ? '\n\n' + esc(r.post_cta) : '') + (tags ? '\n\n' + tags : '') + '</div>'
-    + '<div class="lfa">' + (r.banner_url ? '<img src="' + esc(r.banner_url) + '" alt="">' : '<div class="noimg">No banner yet</div>')
-    + '<div class="lfat"><b>' + esc(r.title) + '</b><span>' + esc(CLIENT_NAME || '') + (site ? ' · ' + esc(site) : '') + ' · Article</span></div></div>';
+    + '<div class="lfa"><div class="lfat"><b>' + esc(r.title) + '</b><span>' + esc(CLIENT_NAME || '') + (site ? ' · ' + esc(site) : '') + ' · Article</span></div>'
+    + (ARTICLES[r.id] ? '<button class="btn lfread" type="button" data-liread="' + esc(r.id) + '">Read article</button>' : '') + '</div>';
+  const rb = $('liCard').querySelector('[data-liread]');
+  if (rb) rb.addEventListener('click', () => { closeLi(); openArticle(rb.dataset.liread); });
   $('liModal').dataset.item = r.id;
   $('liModal').hidden = false; document.body.style.overflow = 'hidden';
 }
@@ -3281,7 +3287,7 @@ function itemCard(r, staff){
       + (li && r.post_body && (staff || ARTICLES[r.id])
           ? '<button class="notebtn seepost" type="button" data-lipost="'+id+'">See the post</button>' : '')
       + (ARTICLES[r.id]
-          ? '<button class="notebtn readbtn" type="button" data-read="'+id+'">Read &amp; comment'
+          ? '<button class="notebtn readbtn" type="button" data-read="'+id+'">'+(li ? 'Read article' : 'Read &amp; comment')
             + (OPENCOMMENTS[r.id] ? '<span class="ccount">'+OPENCOMMENTS[r.id]+'</span>' : '') + '</button>' : '')
       + (staff && ARTICLES[r.id] && !li
           ? '<button class="notebtn wpbtn" type="button" data-wppack="'+id+'" title="HTML with headings, photos, SEO details and schema, ready for WordPress">WordPress pack</button>'
