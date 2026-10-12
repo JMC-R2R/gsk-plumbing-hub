@@ -3293,8 +3293,7 @@ function itemCard(r, staff){
           ? '<button class="notebtn wpbtn" type="button" data-wppack="'+id+'" title="HTML with headings, photos, SEO details and schema, ready for WordPress">WordPress pack</button>'
             + '<button class="notebtn wpbtn" type="button" data-wpcopy="'+id+'" title="See the post and its HTML, then copy it for a WordPress Custom HTML block">View &amp; copy HTML</button>' : '')
       + (staff && ARTICLES[r.id] && li
-          ? '<button class="notebtn wpbtn" type="button" data-lipack="'+id+'" title="Article ready to paste, banner, meta and promo post">LinkedIn pack</button>'
-            + '<button class="notebtn" type="button" data-promo="'+id+'">Promo post</button>' : '')
+          ? '<button class="notebtn wpbtn" type="button" data-lipack="'+id+'" title="Article ready to paste, banner, meta and promo post">LinkedIn pack</button>' : '')
       + link(r.doc_url, '', 'Draft') + link(r.live_url, 'live', 'Live')
     + '</div></div>'
     + '<div class="ticks">'
@@ -3338,14 +3337,7 @@ function itemCard(r, staff){
       + esc(r.client_notes||'')+'</textarea></div>';
 
   if (staff) {
-    if (li && ARTICLES[r.id]) out += '<div class="panel promoedit" id="promo-'+id+'" hidden>'
-         + '<label>Promo post (80 to 150 words, hook in the first two lines, no link)</label>'
-         + '<textarea data-promobody="'+id+'">'+esc(r.post_body||'')+'</textarea>'
-         + '<label>Closing line (points to the article below)</label>'
-         + '<input data-promocta="'+id+'" value="'+esc(r.post_cta||'')+'">'
-         + '<label>Hashtags (4, one is the business name, separated by spaces)</label>'
-         + '<input data-promotags="'+id+'" value="'+esc((r.hashtags||[]).map(h => '#' + String(h).replace(/^#/, '')).join(' '))+'">'
-         + '<button class="btn" type="button" data-promosave="'+id+'">Save promo post</button> <span class="pcount" data-promocount="'+id+'"></span></div>';
+    // Promo post button and editor removed (Jose 12/10/2026): it confused people. See the post shows it.
     out += '<div class="panel" id="seo-'+id+'" hidden>'
          + (li ? copyRow('Meta title', am.meta_title, false, false) + copyRow('Meta description', am.meta_description, false, true)
                  + copyRow('Banner alt text', am.banner_alt, false, false)
