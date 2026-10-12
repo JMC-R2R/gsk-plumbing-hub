@@ -913,6 +913,31 @@
   .bstage.b-changes{color:#b42318;background:#fdecec;border-color:#f3c2c2}
   .bstage.b-ready{color:#0f766e;background:#e6f6f3;border-color:#b8e3da}
   .bstage.b-client{color:#0a6a93;background:#eaf7fe;border-color:#bfe6f8}
+  /* LinkedIn pieces (11/10/2026): banner + article + promo post in Read & comment, feed preview. */
+  .lix{font-family:var(--sans)}
+  .libanner{display:block;width:100%;border-radius:10px;margin:0 0 22px}
+  .linote{background:#fff7e0;border:1px solid #f1d58a;color:#6b4e00;border-radius:10px;padding:10px 14px;font-size:14px;margin:0 0 18px}
+  .lipromo{border:1px solid var(--line);background:var(--soft);border-radius:12px;padding:16px 18px;margin:30px 0 8px}
+  .lipromo .lph{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .lipromo p{margin:0 0 10px;white-space:pre-wrap}
+  .lipromo .litags{color:#0a66c2;font-weight:600}
+  .limeta{border-top:1px dashed var(--line);margin-top:22px;padding-top:14px;font-size:13.5px;color:var(--muted)}
+  .limeta b{color:var(--ink)}
+  .linkbtn{background:none;border:0;padding:0;color:#0a6a93;text-decoration:underline;cursor:pointer;font:inherit}
+  .lisync{display:inline-block;font-size:12px;font-weight:700;color:#6b4e00;background:#fff4d6;border:1px solid #f1d58a;border-radius:999px;padding:2px 9px;margin-top:6px}
+  .lifeed{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.34);font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#191919}
+  .lifeed .lfh{display:flex;gap:10px;align-items:center;padding:12px 16px}
+  .lifeed .lfav{width:44px;height:44px;border-radius:6px;background:var(--accent-fill);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+  .lifeed .lfh b{display:block;font-size:14px}.lifeed .lfh span{font-size:12px;color:#666}
+  .lifeed .lft{padding:0 16px 10px;font-size:14px;line-height:1.45;white-space:pre-wrap}
+  .lifeed .lft .tg{color:#0a66c2;font-weight:600}
+  .lifeed .lfa{border-top:1px solid #e8e8e8;background:#f3f6f8}
+  .lifeed .lfa img{display:block;width:100%}
+  .lifeed .lfa .noimg{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:#666;font-size:13px}
+  .lifeed .lfa .lfat{padding:10px 16px 12px}.lifeed .lfa .lfat b{display:block;font-size:14px}.lifeed .lfa .lfat span{font-size:12px;color:#666}
+  .promoedit textarea{width:100%;min-height:150px;font-size:14px;font-family:var(--sans);padding:10px;border:1px solid var(--line);border-radius:8px}
+  .promoedit input{width:100%;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px}
+  .promoedit .pcount{font-size:12px;color:var(--muted)}
   .qcrow{flex-basis:100%;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin-top:10px;padding:12px 14px;border-radius:12px;
     border:1px solid #f4d6a6;background:linear-gradient(135deg,#fffaf2,#fff)}
   .qcrow.qc-approved{border-color:#b8e3da;background:linear-gradient(135deg,#f1faf7,#fff)}
@@ -1013,6 +1038,18 @@
   </div>
 </div>
 
+
+<div id="liModal" class="gbpwrap" hidden>
+  <div class="gbpsheet" role="dialog" aria-modal="true" aria-label="LinkedIn post preview" style="max-width:520px">
+    <div class="gbphead"><span>Preview &middot; how this appears on LinkedIn</span>
+      <span class="gbphbtns">
+        <button class="gbpcopy" type="button" id="liCopy">Copy post</button>
+        <button class="gbpx" type="button" id="liClose" aria-label="Close">&times;</button>
+      </span></div>
+    <div class="lifeed" id="liCard"></div>
+    <p class="gbpfoot">LinkedIn shows the first two lines before "see more", so the hook comes first. The article and its banner sit under the post.</p>
+  </div>
+</div>
 
 <div id="codeModal" class="artwrap" hidden>
   <div class="artsheet" role="dialog" aria-modal="true" aria-label="WordPress HTML">
@@ -1153,7 +1190,9 @@ const PERSON = p => p === 'jigar' ? "Jigar's team" : (p ? p.charAt(0).toUpperCas
 /* Two-stage approval (17/09/2026): a planned item (plan_batch_id set) needs its TOPIC
    approved before it is written, then its written content approved. */
 const isPlanned = r => !!r.plan_batch_id;
-const topicWaiting = r => isPlanned(r) && !r.topic_approved;
+/* LinkedIn write-ahead (Jose 12/10/2026): every LinkedIn piece is written before the client sees its
+   topic, so a LinkedIn item never waits on a topic tick; one approval covers topic and article. */
+const topicWaiting = r => isPlanned(r) && !r.topic_approved && r.deliverable !== 'linkedin_article';
 /* Monday of the item's week, as a sortable key. Weeks are never shown as dates (rule 2a). */
 const weekKey = iso => { const d = new Date(iso + 'T00:00:00'); const dow = (d.getDay() + 6) % 7;
   d.setDate(d.getDate() - dow); return d.toISOString().slice(0, 10); };
@@ -1305,7 +1344,7 @@ let ARTICLES = {}, OPENCOMMENTS = {}, ART = null, ARTCOMMENTS = [], PENDINGSEL =
 
 async function loadArticleIndex(){
   const [a, c] = await Promise.all([
-    sb.from('ch_item_articles').select('item_id,version,updated_at,qc_status,qc_name,qc_at,qc_note,released_at,scores').eq('client_id', CLIENT_ID),
+    sb.from('ch_item_articles').select('item_id,version,updated_at,qc_status,qc_name,qc_at,qc_note,released_at,scores,meta').eq('client_id', CLIENT_ID),
     sb.from('ch_item_comments').select('item_id,status').eq('client_id', CLIENT_ID)
   ]);
   ARTICLES = {}; OPENCOMMENTS = {};
@@ -1325,7 +1364,7 @@ async function openArticle(itemId, keepScroll){
   if (error || !data) { badge('Could not open the article.','err'); return; }
   ART = { id: itemId, title: r ? r.title : '', html: data.html, version: data.version };
   $('artTitle').textContent = ART.title;
-  $('artBody').innerHTML = data.html;
+  $('artBody').innerHTML = (r && r.deliverable === 'linkedin_article') ? linkedInReadHtml(r, data.html) : data.html;
   $('artBody').querySelectorAll('a[href^="http"]').forEach(x => { x.target = '_blank'; x.rel = 'noopener'; });
   $('artModal').hidden = false; document.body.style.overflow = 'hidden';
   $('artBody').scrollTop = prevScroll;
@@ -1336,6 +1375,26 @@ async function openArticle(itemId, keepScroll){
       .then(({ count }) => { if (ART && ART.id === itemId) $('artUndo').hidden = !count; });
   }
   await loadComments();
+}
+
+/* LinkedIn Read & comment (Jhen's proposal, 11/10/2026): change note after a blog edit sync, the banner,
+   the article, the promo post as it will be shared, then (staff) the SEO settings. Only the article part
+   is the saved HTML; Suggest edit works there. The promo post is edited from the card's Promo post panel. */
+function linkedInReadHtml(r, html){
+  const a = ARTICLES[r.id] || {}, m = a.meta || {};
+  const staff = ME.kind === 'internal';
+  let out = '';
+  if (m.sync_changed && m.sync_note && (staff || a.released_at))
+    out += '<div class="lix linote"><b>Updated ' + esc(ausDate(String(m.sync_at || '').slice(0,10))) + ' to match a blog edit.</b> ' + esc(m.sync_note) + '</div>';
+  if (r.banner_url) out += '<img class="lix libanner" src="' + esc(r.banner_url) + '" alt="' + esc(m.banner_alt || r.title) + '">';
+  out += '<h1>' + esc(r.title) + '</h1>' + html;
+  if (r.post_body) out += '<div class="lix lipromo"><p class="lph">Shared with this post on LinkedIn</p><p>' + esc(r.post_body) + '</p>'
+    + (r.post_cta ? '<p>' + esc(r.post_cta) + '</p>' : '')
+    + ((r.hashtags || []).length ? '<p class="litags">' + r.hashtags.map(h => '#' + esc(String(h).replace(/^#/, ''))).join(' ') + '</p>' : '') + '</div>';
+  if (staff && (m.meta_title || m.meta_description))
+    out += '<div class="lix limeta"><div>Meta title: <b>' + esc(m.meta_title || '') + '</b> (' + String(m.meta_title || '').length + ' characters)</div>'
+      + '<div>Meta description: <b>' + esc(m.meta_description || '') + '</b> (' + String(m.meta_description || '').length + ' characters)</div></div>';
+  return out;
 }
 
 function closeArticle(){
@@ -1478,7 +1537,9 @@ function captureSelection(){
   }
   const rect = range.getBoundingClientRect();
   const pop = $('selPop');
-  $('selEdit').hidden = ME.kind !== 'internal';
+  const inExtra = range.commonAncestorContainer.nodeType === 1
+    ? !!range.commonAncestorContainer.closest('.lix') : !!(range.commonAncestorContainer.parentElement || root).closest('.lix');
+  $('selEdit').hidden = ME.kind !== 'internal' || inExtra;
   pop.hidden = false;
   const pw = pop.offsetWidth;
   pop.style.top = Math.max(8, rect.top - 48) + 'px';
@@ -2315,15 +2376,15 @@ let CODEHTML = '', CODEITEM = null;
    draft here; on the 15th QC-approved blogs in the client's open months are released and
    the client is emailed. Clients only ever see a released article. */
 function blogStage(r){
-  if (r.stream !== 'blog') return null;
+  if (r.stream !== 'blog' && r.deliverable !== 'linkedin_article') return null;
   const a = ARTICLES[r.id];
   if (ME.kind !== 'internal') {
     if (a) return null;                                    // released: Read & comment shows instead
     if (r.review_on) return { cls:'b-ready', label:'Ready for you on ' + ausDate(r.review_on) };
-    if (r.topic_approved && !r.approved) return { cls:'b-writing', label:'Being written' };
+    if ((r.topic_approved || r.deliverable === 'linkedin_article') && !r.approved) return { cls:'b-writing', label:'Being written' };
     return null;
   }
-  if (!a) return r.topic_approved && !r.approved ? { cls:'b-writing', label:'Writing' } : null;
+  if (!a) return (r.topic_approved || r.deliverable === 'linkedin_article') && !r.approved ? { cls:'b-writing', label:'Writing' } : null;
   if (a.released_at) return { cls:'b-client', label:'With the client' };
   if (a.qc_status === 'approved') return { cls:'b-ready', label:'QC approved · releases ' + ausDate(r.review_on) };
   if (a.qc_status === 'changes') return { cls:'b-changes', label:'Sent back for changes' };
@@ -2332,7 +2393,8 @@ function blogStage(r){
 
 function qcPanel(r, staff){
   const a = ARTICLES[r.id];
-  if (!staff || r.stream !== 'blog' || !a || a.released_at) return '';
+  const li = r.deliverable === 'linkedin_article';
+  if (!staff || (r.stream !== 'blog' && !li) || !a || a.released_at) return '';
   const id = esc(r.id);
   const sc = a.scores || {};
   const scores = (sc.seo || sc.ai_search) ? ' · Surfer SEO ' + esc(sc.seo ?? '?') + ', AI search ' + esc(sc.ai_search ?? '?') : '';
@@ -2341,7 +2403,12 @@ function qcPanel(r, staff){
   else if (a.qc_status === 'changes') state = 'Sent back by <b>' + esc(a.qc_name || '') + '</b>: “' + esc(a.qc_note || '') + '”. The writer is revising it.';
   else state = '<b>Ready for QC.</b> Read it, then approve it for the next client release or send it back.';
   const can = ME.admin === true;
+  const send = li && can && a.qc_status === 'approved'
+    ? '<div class="qcbtns"><button class="btn" type="button" data-lisend="' + id + '">Send for approval now</button>'
+      + (!r.repurposed_from ? '<button class="btn ghost" type="button" data-lisendmonth="' + id + '">Send the whole month</button>' : '') + '</div>'
+    : '';
   return '<div class="qcrow qc-' + esc(a.qc_status) + '"><div class="qctext">' + state + '<span class="qcsc">' + scores + '</span></div>'
+    + send
     + (can && a.qc_status !== 'approved'
         ? '<div class="qcbtns"><button class="btn qcok" type="button" data-qcok="' + id + '">QC approve</button>'
           + '<button class="btn ghost" type="button" data-qcback="' + id + '">Send back</button></div>'
@@ -2562,6 +2629,88 @@ async function buildWpPack(itemId, btn){
     badge('Could not build the WordPress pack.','err');
   } finally { if (btn) btn.disabled = false; }
 }
+
+/* LinkedIn pack (Janice publishes from this). Article as a page she can open and copy straight into
+   LinkedIn's article editor, the banner, the SEO settings and the promo post, ready to paste. */
+async function buildLinkedInPack(itemId, btn){
+  const r = ITEMS.find(x => x.id === itemId);
+  if (btn) btn.disabled = true; badge('Building the LinkedIn pack…');
+  try {
+    const [{ data: art, error }, JSZip] = await Promise.all([
+      sb.from('ch_item_articles').select('html,meta,version').eq('item_id', itemId).maybeSingle(), loadJsZip()]);
+    if (error || !art) throw new Error('no article');
+    const m = art.meta || {}, zip = new JSZip();
+    const slug = (r.anchor || 'linkedin-article').slice(0, 60);
+    const doc = document.createElement('div'); doc.innerHTML = art.html;
+    doc.querySelectorAll('h1').forEach(h => h.remove());
+    const tags = (r.hashtags || []).map(h => '#' + String(h).replace(/^#/, '')).join(' ');
+    if (r.banner_url) {
+      try { const b = await fetch(r.banner_url); if (b.ok) zip.file('banner-1920x1080.jpg', await b.blob()); } catch (e) {}
+    }
+    zip.file('article.html', '<!doctype html><html><head><meta charset="utf-8"><title>' + esc(r.title) + '</title>'
+      + '<style>body{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;max-width:720px;margin:40px auto;padding:0 20px;line-height:1.6;color:#191919}'
+      + '.tip{background:#eef3f8;border-radius:8px;padding:10px 14px;font-size:13px;color:#444}</style></head><body>'
+      + '<p class="tip">Select from the title down to the last line, copy, and paste into LinkedIn\'s article editor. Headings, bullets and links come across.</p>'
+      + '<h1>' + esc(r.title) + '</h1>' + doc.innerHTML + '</body></html>\n');
+    zip.file('promo-post.txt', String(r.post_body || '') + '\n\n' + String(r.post_cta || '') + '\n\n' + tags + '\n');
+    const line = (k, v) => k.padEnd(20) + (v || '(not set)') + '\n';
+    zip.file('seo-settings.txt',
+        line('Article title', r.title)
+      + line('Meta title', m.meta_title ? m.meta_title + '  (' + m.meta_title.length + ' characters)' : '')
+      + line('Meta description', m.meta_description ? m.meta_description + '  (' + m.meta_description.length + ' characters)' : '')
+      + line('Banner', r.banner_url ? 'banner-1920x1080.jpg' : 'none (no client photos on file)')
+      + line('Banner alt text', m.banner_alt)
+      + line('Banner on Drive', m.drive_path)
+      + line('Go-live date', r.scheduled_for ? ausDate(r.scheduled_for) : 'not scheduled yet, set it in the hub')
+      + '\nArticle version ' + art.version + ' from the ' + CLIENT_NAME + ' content hub.\n');
+    zip.file('HOW-TO-PUBLISH.txt', [
+      'Publishing "' + r.title + '" on ' + CLIENT_NAME + "'s LinkedIn company page",
+      '',
+      '1. On the company page (Admin view): Write article.',
+      '2. Cover image: upload banner-1920x1080.jpg. Add the alt text from seo-settings.txt.',
+      '3. Title: paste the article title exactly as it is in seo-settings.txt.',
+      '4. Open article.html in a browser, select from the first paragraph to the end, copy, paste into the body.',
+      '   Check the headings, bullets and links came across.',
+      '5. Settings (top right) > SEO: paste the meta title and meta description from seo-settings.txt.',
+      '6. Publish or schedule it for the go-live date. In the share box, paste promo-post.txt.',
+      '   No link in the post: LinkedIn shows the article and banner under it.',
+      '7. In the hub: set the Go-live date on the card, then paste the LinkedIn URL under Links & brief once it is live.',
+    ].join('\n') + '\n');
+    const blob = await zip.generateAsync({ type:'blob' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = slug + '-linkedin-pack.zip';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    sb.rpc('ch_log_team_event', { p_item_id: itemId, p_kind: 'pack_downloaded', p_detail: { version: art.version, how: 'linkedin pack' } });
+    badge('LinkedIn pack downloaded','ok');
+  } catch (e) {
+    badge('Could not build the LinkedIn pack.','err');
+  } finally { if (btn) btn.disabled = false; }
+}
+
+function openLinkedInPreview(itemId){
+  const r = ITEMS.find(x => x.id === itemId); if (!r) return;
+  const tags = (r.hashtags || []).map(h => '<span class="tg">#' + esc(String(h).replace(/^#/, '')) + '</span>').join(' ');
+  const site = String(CFG.site_url || r.target_url || '').replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '');
+  $('liCard').innerHTML =
+      '<div class="lfh"><div class="lfav">' + esc((CLIENT_NAME || '?').slice(0,1)) + '</div><div><b>' + esc(CLIENT_NAME || 'Company page') + '</b>'
+    + '<span>' + (r.scheduled_for ? 'Goes live ' + esc(ausDate(r.scheduled_for)) : 'Company page post') + '</span></div></div>'
+    + '<div class="lft">' + esc(r.post_body || '') + (r.post_cta ? '\n\n' + esc(r.post_cta) : '') + (tags ? '\n\n' + tags : '') + '</div>'
+    + '<div class="lfa">' + (r.banner_url ? '<img src="' + esc(r.banner_url) + '" alt="">' : '<div class="noimg">No banner yet</div>')
+    + '<div class="lfat"><b>' + esc(r.title) + '</b><span>' + esc(CLIENT_NAME || '') + (site ? ' · ' + esc(site) : '') + ' · Article</span></div></div>';
+  $('liModal').dataset.item = r.id;
+  $('liModal').hidden = false; document.body.style.overflow = 'hidden';
+}
+function closeLi(){ $('liModal').hidden = true; document.body.style.overflow = ''; }
+$('liClose').addEventListener('click', closeLi);
+$('liModal').addEventListener('click', e => { if (e.target.id === 'liModal') closeLi(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('liModal').hidden) closeLi(); });
+$('liCopy').addEventListener('click', async () => {
+  const r = ITEMS.find(x => x.id === $('liModal').dataset.item); if (!r) return;
+  const txt = [r.post_body, r.post_cta, (r.hashtags || []).map(h => '#' + String(h).replace(/^#/, '')).join(' ')].filter(Boolean).join('\n\n');
+  try { await navigator.clipboard.writeText(txt); $('liCopy').textContent = 'Copied ✓'; setTimeout(() => { $('liCopy').textContent = 'Copy post'; }, 1800); }
+  catch (e) { badge('Could not copy. Select the text instead.','err'); }
+});
 
 function renderPanel(t){
   const el = $('panel-'+cssId(t.key));
@@ -2916,7 +3065,7 @@ function monthBriefMarkup(t){
   if (!rows.length) return '<p class="empty">Nothing scheduled for this month yet.</p>';
   const staff = ME.kind === 'internal';
 
-  const planned = rows.filter(isPlanned);
+  const planned = rows.filter(r => isPlanned(r) && r.deliverable !== 'linkedin_article');
   const topicsOk = planned.filter(r => r.topic_approved).length;
   const topicsLeft = planned.length - topicsOk;
   const done    = rows.filter(r => r.approved).length;
@@ -3100,42 +3249,55 @@ function itemCard(r, staff){
   const blogState = blogStage(r);
   if (blogState) facts.push('<span class="bstage '+blogState.cls+'">'+esc(blogState.label)+'</span>');
 
+  const li = r.deliverable === 'linkedin_article';
+  const srcA = r.repurposed_from ? ARTICLES[r.repurposed_from] : null;
+  const srcState = !srcA ? (staff ? ' · blog not written yet' : '')
+    : (staff ? ' · blog ' + (srcA.released_at ? 'with the client' : srcA.qc_status === 'approved' ? 'QC approved' : srcA.qc_status === 'changes' ? 'sent back' : 'ready for QC') : '');
   const target = r.stream === 'gbp' && r.target_query
     ? '<span class="target">Targets: <b>'+esc(r.target_query)+'</b></span>'
     : (r.repurposed_from ? '<span class="target">Repurposes the blog: <b>'
-        + esc((ITEMS.find(x => x.id === r.repurposed_from)||{}).title || 'a blog')+'</b> · includes 1 promotional post</span>' : '');
+        + esc((ITEMS.find(x => x.id === r.repurposed_from)||{}).title || 'a blog')+'</b> · includes 1 promotional post' + esc(srcState)
+        + (staff && srcA ? ' <button class="linkbtn" type="button" data-read="'+esc(r.repurposed_from)+'">Open the blog</button>' : '') + '</span>'
+       : (li ? '<span class="target">LinkedIn series piece · includes its promotional post</span>' : ''));
+  const am = (ARTICLES[r.id] || {}).meta || {};
+  const syncTag = li && am.sync_changed && am.sync_note ? '<span class="lisync">Updated to match blog edit, ' + esc(ausDate(String(am.sync_at || '').slice(0,10))) + '</span>' : '';
 
   const stage = r.approved ? ' s-done' : (isPlanned(r) && r.topic_approved ? ' s-topic' : '');
   let out = '<div class="card'+stage+'" id="'+esc(r.anchor)+'" data-id="'+id+'">'
     + '<div class="body">'
     + '<p class="ttl">'+esc(r.title)+'</p>'
     + '<div class="facts">'+facts.join('')+'</div>'
-    + target
+    + target + syncTag
     + (r.secondary_note ? '<div class="why">'+esc(r.secondary_note)+'</div>' : '')
     + '<div class="actions">'
       + '<button class="notebtn" type="button" data-note="'+id+'">Notes'+(r.client_notes ? '<span class="notedot"></span>' : '')+'</button>'
-      + (staff && (r.target_url || r.meta_description || r.target_query)
-          ? '<button class="notebtn" type="button" data-seo="'+id+'">Target URL &amp; meta</button>' : '')
+      + (staff && (r.target_url || r.meta_description || r.target_query || (li && am.meta_title))
+          ? '<button class="notebtn" type="button" data-seo="'+id+'">'+(li ? 'Meta &amp; source' : 'Target URL &amp; meta')+'</button>' : '')
       + (staff ? '<button class="notebtn" type="button" data-links="'+id+'">Links &amp; brief</button>' : '')
       + '<button class="notebtn" type="button" data-assignbtn="'+id+'">Assign'
         + (assignDot(r, staff) ? '<span class="notedot"></span>' : '') + '</button>'
       + (r.stream === 'gbp' && r.post_body
           ? '<button class="notebtn seepost" type="button" data-gbp="'+id+'">See the post</button>' : '')
+      + (li && r.post_body && (staff || ARTICLES[r.id])
+          ? '<button class="notebtn seepost" type="button" data-lipost="'+id+'">See the post</button>' : '')
       + (ARTICLES[r.id]
           ? '<button class="notebtn readbtn" type="button" data-read="'+id+'">Read &amp; comment'
             + (OPENCOMMENTS[r.id] ? '<span class="ccount">'+OPENCOMMENTS[r.id]+'</span>' : '') + '</button>' : '')
-      + (staff && ARTICLES[r.id]
+      + (staff && ARTICLES[r.id] && !li
           ? '<button class="notebtn wpbtn" type="button" data-wppack="'+id+'" title="HTML with headings, photos, SEO details and schema, ready for WordPress">WordPress pack</button>'
             + '<button class="notebtn wpbtn" type="button" data-wpcopy="'+id+'" title="See the post and its HTML, then copy it for a WordPress Custom HTML block">View &amp; copy HTML</button>' : '')
+      + (staff && ARTICLES[r.id] && li
+          ? '<button class="notebtn wpbtn" type="button" data-lipack="'+id+'" title="Article ready to paste, banner, meta and promo post">LinkedIn pack</button>'
+            + '<button class="notebtn" type="button" data-promo="'+id+'">Promo post</button>' : '')
       + link(r.doc_url, '', 'Draft') + link(r.live_url, 'live', 'Live')
     + '</div></div>'
     + '<div class="ticks">'
-      + (isPlanned(r)
+      + (isPlanned(r) && !li
           ? '<label class="tickl"><input class="tick" type="checkbox" data-topic="'+id+'"'+(r.topic_approved?' checked':'')+'> Approve topic</label>'
           : '')
       + '<label class="tickl"><input class="tick" type="checkbox" data-approve="'+id+'"'
         + (r.approved?' checked':'') + (canTick?'':' disabled')
-        + ' title="'+(canTick?'Approve this item':(topicWaiting(r)?'Approve the topic first':'Not ready for approval yet'))+'"> Approve content</label>'
+        + ' title="'+(canTick?'Approve this item':(topicWaiting(r)?'Approve the topic first':'Not ready for approval yet'))+'"> '+(li ? 'Approve topic &amp; article' : 'Approve content')+'</label>'
       + '<label class="tickl no"><input class="tick" type="checkbox" data-reject="'+id+'"'
         + (r.not_approved?' checked':'')
         + ' title="Tell us what needs changing"> Not approved</label>'
@@ -3159,7 +3321,7 @@ function itemCard(r, staff){
     + (staff ? '<div class="staffrow">'
         + '<span>Assigned to <b>'+esc(n.assignee ? PERSON(n.assignee) : 'Unassigned')+'</b></span>'
         + '<span>Status <select data-status="'+id+'">'+statusOpts(r.id)+'</select></span>'
-        + '<span class="schedset" title="'+(r.approved ? 'The date this goes live on the website' : 'Approve the content before scheduling it')+'">Go-live date '
+        + '<span class="schedset" title="'+(r.approved ? (li ? 'The date this goes live on LinkedIn' : 'The date this goes live on the website') : 'Approve the content before scheduling it')+'">Go-live date '
           + '<input type="date" data-sched="'+id+'" value="'+esc(r.scheduled_for||'')+'"'+(r.approved || r.scheduled_for ? '' : ' disabled')+'></span>'
         + ((n.writer || n.publisher) ? '<span class="owners" style="margin:0;font-size:12px">Write: '+esc(PERSON(n.writer))
             + ' · Publish: '+esc(PERSON(n.publisher))+'</span>' : '')
@@ -3170,9 +3332,20 @@ function itemCard(r, staff){
       + esc(r.client_notes||'')+'</textarea></div>';
 
   if (staff) {
+    if (li && ARTICLES[r.id]) out += '<div class="panel promoedit" id="promo-'+id+'" hidden>'
+         + '<label>Promo post (80 to 150 words, hook in the first two lines, no link)</label>'
+         + '<textarea data-promobody="'+id+'">'+esc(r.post_body||'')+'</textarea>'
+         + '<label>Closing line (points to the article below)</label>'
+         + '<input data-promocta="'+id+'" value="'+esc(r.post_cta||'')+'">'
+         + '<label>Hashtags (4, one is the business name, separated by spaces)</label>'
+         + '<input data-promotags="'+id+'" value="'+esc((r.hashtags||[]).map(h => '#' + String(h).replace(/^#/, '')).join(' '))+'">'
+         + '<button class="btn" type="button" data-promosave="'+id+'">Save promo post</button> <span class="pcount" data-promocount="'+id+'"></span></div>';
     out += '<div class="panel" id="seo-'+id+'" hidden>'
-         + copyRow('Target URL', r.target_url, true, false)
-         + copyRow('Meta description', r.meta_description, false, true)
+         + (li ? copyRow('Meta title', am.meta_title, false, false) + copyRow('Meta description', am.meta_description, false, true)
+                 + copyRow('Banner alt text', am.banner_alt, false, false)
+                 + (r.repurposed_from ? copyRow('Source blog', (ITEMS.find(x => x.id === r.repurposed_from)||{}).live_url || r.target_url, true, false) : '')
+               : copyRow('Target URL', r.target_url, true, false)
+                 + copyRow('Meta description', r.meta_description, false, true))
          + (r.stream === 'gbp' ? copyRow('Target search', r.target_query, false, false) : '')
          + copyRow('Primary keyword', r.main_keyword, false, false)
          + '</div>';
@@ -3303,6 +3476,7 @@ function wireMonthBrief(el, t){
     if (error) { cb.checked = !cb.checked; badge('Could not save that.','err'); return; }
     const it = ITEMS.find(r => r.id === id);
     it.approved = cb.checked;
+    if (cb.checked) it.topic_approved = true;
     it.client_status = cb.checked ? 'approved' : 'for_approval';
     badge('Saved','ok');
     refreshMonth(t);
@@ -3336,7 +3510,7 @@ function wireMonthBrief(el, t){
     if (error) { badge('Could not approve that week.','err'); return; }
     ITEMS.filter(r => ids.includes(r.id)).forEach(r => {
       Object.assign(r, patch);
-      if (patch.approved) r.client_status = 'approved';
+      if (patch.approved) { r.client_status = 'approved'; r.topic_approved = true; }
     });
     badge('Week approved','ok');
     refreshMonth(t);
@@ -3357,7 +3531,7 @@ function wireMonthBrief(el, t){
     if (error) { badge('Could not approve the month.','err'); refreshMonth(t); return; }
     ITEMS.filter(r => ids.includes(r.id)).forEach(r => {
       Object.assign(r, patch);
-      if (patch.approved) r.client_status = 'approved';
+      if (patch.approved) { r.client_status = 'approved'; r.topic_approved = true; }
     });
     badge(ids.length + ' approved','ok');
     refreshMonth(t);
@@ -3408,6 +3582,40 @@ function wireMonthBrief(el, t){
     el.querySelector('[data-qcbox="'+b.dataset.qccancel+'"]').classList.add('hide');
   }));
   el.querySelectorAll('[data-wpcopy]').forEach(b => b.addEventListener('click', () => copyWpHtml(b.dataset.wpcopy, b)));
+  el.querySelectorAll('[data-lipack]').forEach(b => b.addEventListener('click', () => buildLinkedInPack(b.dataset.lipack, b)));
+  el.querySelectorAll('[data-lipost]').forEach(b => b.addEventListener('click', () => openLinkedInPreview(b.dataset.lipost)));
+  el.querySelectorAll('[data-promo]').forEach(b => b.addEventListener('click', () => {
+    const p = $('promo-' + b.dataset.promo); if (p) p.hidden = !p.hidden;
+  }));
+  el.querySelectorAll('[data-promobody]').forEach(ta => {
+    const show = () => { const c = el.querySelector('[data-promocount="'+ta.dataset.promobody+'"]');
+      if (c) c.textContent = (ta.value.trim().split(/\s+/).filter(Boolean).length) + ' words'; };
+    ta.addEventListener('input', show); show();
+  });
+  el.querySelectorAll('[data-promosave]').forEach(b => b.addEventListener('click', async () => {
+    const id = b.dataset.promosave, it = ITEMS.find(x => x.id === id);
+    const body = el.querySelector('[data-promobody="'+id+'"]').value.trim();
+    const cta = el.querySelector('[data-promocta="'+id+'"]').value.trim();
+    const tags = el.querySelector('[data-promotags="'+id+'"]').value.split(/[\s,]+/).map(x => x.replace(/^#/, '')).filter(Boolean);
+    if (!body) { badge('The promo post is empty.','err'); return; }
+    b.disabled = true; badge('Saving…');
+    const { error } = await sb.rpc('ch_linkedin_update_post', { p_item_id: id, p_body: body, p_cta: cta || null, p_hashtags: tags });
+    b.disabled = false;
+    if (error) { badge(error.message || 'Could not save the promo post.','err'); return; }
+    Object.assign(it, { post_body: body, post_cta: cta || null, hashtags: tags });
+    badge('Promo post saved','ok');
+  }));
+  el.querySelectorAll('[data-lisend],[data-lisendmonth]').forEach(b => b.addEventListener('click', async () => {
+    const id = b.dataset.lisend || b.dataset.lisendmonth, whole = !!b.dataset.lisendmonth;
+    b.disabled = true; badge('Sending…');
+    const { data, error } = await sb.rpc('ch_linkedin_send_now', { p_item_id: id, p_whole_month: whole });
+    b.disabled = false;
+    if (error) { badge(error.message || 'Could not send it.','err'); return; }
+    await loadArticleIndex();
+    ITEMS.filter(x => x.id === id || (whole && x.month_key === t.monthKey && x.deliverable === 'linkedin_article' && ARTICLES[x.id] && ARTICLES[x.id].released_at))
+      .forEach(x => { if (!x.approved) x.client_status = 'for_approval'; });
+    badge(data + (data === 1 ? ' piece' : ' pieces') + ' sent to the client for approval','ok'); refreshMonth(t);
+  }));
   el.querySelectorAll('[data-sched]').forEach(inp => inp.addEventListener('change', async () => {
     const id = inp.dataset.sched, it = ITEMS.find(r => r.id === id);
     badge('Saving…');
@@ -3633,7 +3841,7 @@ function planPanel(){
   const lastFail = REQUESTS.find(r => r.status === 'failed');
   let line = 'No three-month plan yet.';
   if (latest) {
-    const items = ITEMS.filter(r => r.plan_batch_id === latest.id);
+    const items = ITEMS.filter(r => r.plan_batch_id === latest.id && r.deliverable !== 'linkedin_article');
     const ok = items.filter(r => r.topic_approved).length;
     line = 'Current plan: <b>' + esc(monthLabel(latest.start_month)) + '</b> for ' + latest.months + ' months · '
          + ok + ' / ' + items.length + ' topics approved by the client';
