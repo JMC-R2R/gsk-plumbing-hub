@@ -683,6 +683,10 @@
   /* Article review (stage 2). The client reads the written piece in place, highlights
      text and leaves a comment that is stamped with their name by the database. */
   .readbtn{border-color:var(--accent,#17B4F0)!important;font-weight:600}
+  /* LinkedIn (Jose 12/10/2026): the one button the client needs, so it looks like the main action */
+  .notebtn.liread{background:var(--accent-fill)!important;color:var(--on-accent)!important;border-color:var(--accent-fill)!important;
+    font-size:14.5px!important;font-weight:800;padding:8px 18px!important;box-shadow:0 8px 18px -10px rgba(15,15,18,.6)}
+  .notebtn.liread:hover{filter:brightness(1.08)}
   .readbtn .ccount{display:inline-block;min-width:18px;margin-left:6px;padding:0 5px;border-radius:9px;
     background:var(--accent-fill,#17B4F0);color:var(--on-accent,#fff);font-size:11px;line-height:18px;text-align:center}
   .artwrap{position:fixed;inset:0;background:rgba(12,20,28,.66);z-index:9100;display:flex;
@@ -3284,10 +3288,8 @@ function itemCard(r, staff){
         + (assignDot(r, staff) ? '<span class="notedot"></span>' : '') + '</button>'
       + (r.stream === 'gbp' && r.post_body
           ? '<button class="notebtn seepost" type="button" data-gbp="'+id+'">See the post</button>' : '')
-      + (li && r.post_body && (staff || ARTICLES[r.id])
-          ? '<button class="notebtn seepost" type="button" data-lipost="'+id+'">See the post</button>' : '')
       + (ARTICLES[r.id]
-          ? '<button class="notebtn readbtn" type="button" data-read="'+id+'">'+(li ? 'Read article' : 'Read &amp; comment')
+          ? '<button class="notebtn readbtn'+(li ? ' liread' : '')+'" type="button" data-read="'+id+'">'+(li ? '&#9654; Read &amp; comment' : 'Read &amp; comment')
             + (OPENCOMMENTS[r.id] ? '<span class="ccount">'+OPENCOMMENTS[r.id]+'</span>' : '') + '</button>' : '')
       + (staff && ARTICLES[r.id] && !li
           ? '<button class="notebtn wpbtn" type="button" data-wppack="'+id+'" title="HTML with headings, photos, SEO details and schema, ready for WordPress">WordPress pack</button>'
