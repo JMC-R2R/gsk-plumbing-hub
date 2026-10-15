@@ -1023,7 +1023,7 @@
     <label for="email">Email</label>
     <input id="email" type="email" autocomplete="username" required>
     <div id="codeStep" class="hide">
-      <label for="code">Six digit code</label>
+      <label for="code">8-digit code</label>
       <input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8">
       <p class="sub" id="codeHint"></p>
     </div>
@@ -1290,7 +1290,7 @@ $('loginForm').addEventListener('submit', async e => {
       $('email').readOnly = true;
       $('codeStep').classList.remove('hide');
       $('code').required = true;
-      $('codeHint').textContent = 'We sent a six digit code to ' + email + '. It expires in one hour.';
+      $('codeHint').textContent = 'We sent an 8-digit code to ' + email + '. It expires in one hour.';
       $('resend').classList.remove('hide');
       $('loginBtn').textContent = 'Sign in';
       $('code').focus();
