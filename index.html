@@ -2381,15 +2381,20 @@ let CODEHTML = '', CODEITEM = null;
    Jose 04/10/2026. A blog topic approval queues the cloud writer; Janice or Jhen QC the
    draft here; on the 15th QC-approved blogs in the client's open months are released and
    the client is emailed. Clients only ever see a released article. */
+// One-off (Jhen 15/10/2026): pages show View page rather than Live while they wait for approval.
+const isPage = r => r.stream === 'location_page' || r.stream === 'service_page';
 function blogStage(r){
   if (r.stream !== 'blog' && r.deliverable !== 'linkedin_article') return null;
   const a = ARTICLES[r.id];
   if (ME.kind !== 'internal') {
     if (a) return null;                                    // released: Read & comment shows instead
     if (r.review_on) return { cls:'b-ready', label:'Ready for you on ' + ausDate(r.review_on) };
+    if (r.stream === 'blog' && r.doc_url) return null;    // Google Doc blog: Read & comment shows instead
     if ((r.topic_approved || r.deliverable === 'linkedin_article') && !r.approved) return { cls:'b-writing', label:'Being written' };
     return null;
   }
+  // One-off (Jhen 15/10/2026): a blog written in Google Docs is ready for QC once its doc is linked.
+  if (!a && r.stream === 'blog' && r.doc_url && r.topic_approved && !r.approved) return { cls:'b-qc', label:'Ready for QC' };
   if (!a) return (r.topic_approved || r.deliverable === 'linkedin_article') && !r.approved ? { cls:'b-writing', label:'Writing' } : null;
   if (a.released_at) return { cls:'b-client', label:'With the client' };
   if (a.qc_status === 'approved') return { cls:'b-ready', label:'QC approved · releases ' + ausDate(r.review_on) };
@@ -3296,7 +3301,11 @@ function itemCard(r, staff){
             + '<button class="notebtn wpbtn" type="button" data-wpcopy="'+id+'" title="See the post and its HTML, then copy it for a WordPress Custom HTML block">View &amp; copy HTML</button>' : '')
       + (staff && ARTICLES[r.id] && li
           ? '<button class="notebtn wpbtn" type="button" data-lipack="'+id+'" title="Article ready to paste, banner, meta and promo post">LinkedIn pack</button>' : '')
-      + link(r.doc_url, '', 'Draft') + link(r.live_url, 'live', 'Live')
+      // One-off (Jhen 15/10/2026): a blog written in Google Docs opens its doc from Read & comment.
+      + (r.stream === 'blog' && r.doc_url && !ARTICLES[r.id]
+          ? '<a class="notebtn readbtn" href="'+esc(r.doc_url)+'" target="_blank" rel="noopener">Read &amp; comment</a>'
+          : link(r.doc_url, '', 'Draft'))
+      + link(r.live_url, 'live', isPage(r) ? 'View page' : 'Live')
     + '</div></div>'
     + '<div class="ticks">'
       + (isPlanned(r) && !li
@@ -4155,7 +4164,7 @@ function progressMarkup(){
             + (r.doc_url  ? '<a class="dl" href="'+esc(r.doc_url)+'" target="_blank" rel="noopener">Draft</a>'
                           : '<span class="dl-none">—</span>')
             + ' '
-            + (r.live_url ? '<a class="dl live" href="'+esc(r.live_url)+'" target="_blank" rel="noopener">Live</a>'
+            + (r.live_url ? '<a class="dl live" href="'+esc(r.live_url)+'" target="_blank" rel="noopener">'+(isPage(r) ? 'View page' : 'Live')+'</a>'
                           : '<span class="dl-none">—</span>')
             + '</td>'
           + '<td><span class="sp '+esc(r.client_status)+'">'
