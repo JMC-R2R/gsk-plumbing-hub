@@ -3247,6 +3247,9 @@ function gbpCard(r, staff){
 }
 
 function itemCard(r, staff){
+  // One-off (Jhen 16/10/2026): pages never show article buttons. The writer drafted two October pages by mistake on 15/10;
+  // those drafts stay stored, but the cards show View page only, like every other page.
+  const art = isPage(r) ? null : ARTICLES[r.id];
   const id = esc(r.id), st = esc(r.client_status), fs = esc(r.funnel_stage || '');
   // Written content can only be approved once it exists AND its topic was approved.
   const canTick = r.client_status !== 'started' && !topicWaiting(r);
@@ -3274,7 +3277,7 @@ function itemCard(r, staff){
         + esc((ITEMS.find(x => x.id === r.repurposed_from)||{}).title || 'a blog')+'</b> · includes 1 promotional post' + esc(srcState)
         + (staff && srcA ? ' <button class="linkbtn" type="button" data-read="'+esc(r.repurposed_from)+'">Open the blog</button>' : '') + '</span>'
        : (li ? '<span class="target">LinkedIn series piece · includes its promotional post</span>' : ''));
-  const am = (ARTICLES[r.id] || {}).meta || {};
+  const am = (art || {}).meta || {};
   const syncTag = li && am.sync_changed && am.sync_note ? '<span class="lisync">Updated to match blog edit, ' + esc(ausDate(String(am.sync_at || '').slice(0,10))) + '</span>' : '';
 
   const stage = r.approved ? ' s-done' : (isPlanned(r) && r.topic_approved ? ' s-topic' : '');
@@ -3293,16 +3296,16 @@ function itemCard(r, staff){
         + (assignDot(r, staff) ? '<span class="notedot"></span>' : '') + '</button>'
       + (r.stream === 'gbp' && r.post_body
           ? '<button class="notebtn seepost" type="button" data-gbp="'+id+'">See the post</button>' : '')
-      + (ARTICLES[r.id]
+      + (art
           ? '<button class="notebtn readbtn'+(li ? ' liread' : '')+'" type="button" data-read="'+id+'">'+(li ? '&#9654; Read &amp; comment' : 'Read &amp; comment')
             + (OPENCOMMENTS[r.id] ? '<span class="ccount">'+OPENCOMMENTS[r.id]+'</span>' : '') + '</button>' : '')
-      + (staff && ARTICLES[r.id] && !li
+      + (staff && art && !li
           ? '<button class="notebtn wpbtn" type="button" data-wppack="'+id+'" title="HTML with headings, photos, SEO details and schema, ready for WordPress">WordPress pack</button>'
             + '<button class="notebtn wpbtn" type="button" data-wpcopy="'+id+'" title="See the post and its HTML, then copy it for a WordPress Custom HTML block">View &amp; copy HTML</button>' : '')
-      + (staff && ARTICLES[r.id] && li
+      + (staff && art && li
           ? '<button class="notebtn wpbtn" type="button" data-lipack="'+id+'" title="Article ready to paste, banner, meta and promo post">LinkedIn pack</button>' : '')
       // One-off (Jhen 15/10/2026): a blog written in Google Docs opens its doc from Read & comment.
-      + (r.stream === 'blog' && r.doc_url && !ARTICLES[r.id]
+      + (r.stream === 'blog' && r.doc_url && !art
           ? '<a class="notebtn readbtn" href="'+esc(r.doc_url)+'" target="_blank" rel="noopener">Read &amp; comment</a>'
           : link(r.doc_url, '', 'Draft'))
       + link(r.live_url, 'live', isPage(r) ? 'View page' : 'Live')
