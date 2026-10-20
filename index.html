@@ -719,6 +719,18 @@
   .artside{border-left:1px solid #e3e8ee;background:#fafbfc;overflow:auto;padding:14px}
   .artside h4{margin:2px 2px 10px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5d6b79}
   .artside .showres{font-size:12.5px;color:#5d6b79;display:flex;gap:6px;align-items:center;margin:0 2px 12px}
+  .artlog{margin-top:18px;padding-top:14px;border-top:1px solid #e3e8ee}
+  .artlog h4 .adm-only{margin-left:6px;font-size:10px;letter-spacing:.06em;color:#7c5cd6;background:#f1edfb;
+    border-radius:999px;padding:2px 7px;vertical-align:1px}
+  .artlog .tday{margin:12px 0 4px;font-size:10.5px}
+  .artlog .tev{grid-template-columns:24px minmax(0,1fr);gap:8px;padding:7px 0}
+  .artlog .tev:not(:last-child)::after{left:11px;top:31px}
+  .artlog .tdot{width:24px;height:24px;box-shadow:0 0 0 3px #fafbfc}
+  .artlog .tdot svg{width:12px;height:12px}
+  .artlog .tev .line1{font-size:13px}
+  .artlog .tev .quote{font-size:12.5px;margin-top:5px}
+  .artlog .tev .t{grid-column:2;padding-top:0;font-size:11.5px}
+  .artlog .empty{font-size:12.5px;color:#5d6b79;margin:0 2px}
   .ccard{background:#fff;border:1px solid #e1e7ed;border-radius:10px;padding:11px 12px;margin-bottom:10px;cursor:pointer}
   .ccard.res{opacity:.62}
   .ccard.flash{border-color:#e3b400;box-shadow:0 0 0 3px #fff1a8}
@@ -1081,7 +1093,9 @@
       <article class="artbody" id="artBody"></article>
       <aside class="artside"><h4>Comments</h4>
         <label class="showres"><input type="checkbox" id="artShowRes"> Show resolved</label>
-        <div id="artComments"></div></aside>
+        <div id="artComments"></div>
+        <section class="artlog" id="artLog" hidden><h4>Change log <span class="adm-only">Admins only</span></h4>
+          <div id="artLogList"></div></section></aside>
     </div>
   </div>
 </div>
@@ -1097,7 +1111,7 @@
   <label for="eNew">Replace with</label>
   <textarea id="eNew"></textarea>
   <div class="ai"><input id="eAsk" maxlength="600" placeholder="Or tell AI what to change, e.g. make it shorter"><button type="button" id="eAI">Suggest with AI</button></div>
-  <p class="note">AI keeps to the client's voice, facts and service areas. Read the wording before you apply it. Every edit is in the change log and can be undone.</p>
+  <p class="note">AI keeps to the client's voice, facts and service areas. Read the wording before you apply it. To delete the passage, clear the box and press Apply. Every edit is in the change log and can be undone.</p>
   <div class="row"><span class="as" id="eAs"></span>
     <span><button type="button" id="eCancel">Cancel</button> <button type="button" class="go" id="eApply">Apply edit</button></span></div>
 </div>
@@ -1381,7 +1395,22 @@ async function openArticle(itemId, keepScroll){
     sb.from('ch_item_article_versions').select('id', {count:'exact', head:true}).eq('item_id', itemId)
       .then(({ count }) => { if (ART && ART.id === itemId) $('artUndo').hidden = !count; });
   }
+  loadArticleLog(itemId);
   await loadComments();
+}
+
+/* Change log for the open article: who changed what and when. Hub admins only. The events
+   table is staff-only in the database as well, so a client login reads nothing here. */
+async function loadArticleLog(itemId){
+  const box = $('artLog');
+  if (!ME || ME.admin !== true) { box.hidden = true; return; }
+  box.hidden = false;
+  $('artLogList').innerHTML = '<p class="empty">Loading…</p>';
+  const { data, error } = await sb.from('ch_item_events').select('*').eq('item_id', itemId)
+    .neq('kind', 'ai_suggested').order('created_at', {ascending:false}).limit(100);
+  if (!ART || ART.id !== itemId) return;
+  $('artLogList').innerHTML = error ? '<p class="empty">Could not load the change log.</p>'
+                                    : eventsMarkup(data || [], { noTitle:true });
 }
 
 /* LinkedIn Read & comment (Jhen's proposal, 11/10/2026): change note after a blog edit sync, the banner,
@@ -1596,7 +1625,7 @@ function selectionContext(){
   const e = i + PENDINGSEL.quote.length;
   return { before: text.slice(Math.max(0, i - 600), i), after: text.slice(e, e + 600) };
 }
-function replaceInHtml(html, sel){
+function replaceInHtml(html, sel, del){
   const box = document.createElement('div'); box.innerHTML = html;
   const { nodes, text } = textIndex(box);
   const start = locate(text, sel);
@@ -1607,10 +1636,20 @@ function replaceInHtml(html, sel){
   if (!s || !e) return { err: 'Could not find that passage. Close the article, reopen it and try again.' };
   const BLOCK = 'p,li,h2,h3,h4,td,th,figcaption,dd,dt';
   const bs = s.n.parentElement.closest(BLOCK), be = e.n.parentElement.closest(BLOCK);
-  if (!bs || bs !== be) return { err: 'Edit one paragraph, heading or list item at a time.' };
+  /* A deletion may run across several blocks; a rewrite stays inside one. */
+  if (!bs || !be || (bs !== be && !del)) return { err: 'Edit one paragraph, heading or list item at a time. To remove several paragraphs, clear the box and press Apply.' };
   const r = document.createRange(); r.setStart(s.n, start - s.start); r.setEnd(e.n, end - e.start);
   const hasLink = !!r.cloneContents().querySelector('a') || s.n.parentElement.closest('a') !== e.n.parentElement.closest('a');
-  return { box, r, hasLink };
+  return { box, r, hasLink, blocks: [bs, be] };
+}
+/* After a deletion, drop any paragraph, heading or list item it left empty (and a list left
+   with no items), so a removed paragraph does not leave a blank gap in the article. */
+function pruneEmpty(box){
+  const BLOCK = 'p,li,h2,h3,h4,figcaption,dd,dt';
+  box.querySelectorAll(BLOCK).forEach(b => {
+    if (!b.textContent.trim() && !b.querySelector('img,picture,video,iframe')) b.remove();
+  });
+  box.querySelectorAll('ul,ol').forEach(l => { if (!l.querySelector('li')) l.remove(); });
 }
 $('selEdit').addEventListener('click', e => {
   e.stopPropagation();
@@ -1651,19 +1690,25 @@ $('eAI').addEventListener('click', async () => {
 $('eApply').addEventListener('click', async () => {
   if (!PENDINGSEL || !ART) return;
   const repl = $('eNew').value.replace(/\s+/g, ' ').trim();
-  if (!repl) { badge('Type the new wording, or press Cancel.','err'); $('eNew').focus(); return; }
+  const del = !repl;
   if (repl === PENDINGSEL.quote) { $('eForm').hidden = true; return; }
-  const out = replaceInHtml(ART.html, PENDINGSEL);
+  const out = replaceInHtml(ART.html, PENDINGSEL, del);
   if (out.err) { badge(out.err,'err'); return; }
-  if (out.hasLink && !confirm('This passage contains a link. Applying the edit removes that link. Continue?')) return;
-  out.r.deleteContents(); out.r.insertNode(document.createTextNode(repl)); out.box.normalize();
+  if (del) {
+    if (!confirm('Delete this passage from the article?' + (out.hasLink ? ' It contains a link, which will go too.' : '') + ' You can bring it back with Undo.')) return;
+    out.r.deleteContents(); pruneEmpty(out.box); out.box.normalize();
+    if (!out.box.textContent.trim()) { badge('That would leave the article empty.','err'); return; }
+  } else {
+    if (out.hasLink && !confirm('This passage contains a link. Applying the edit removes that link. Continue?')) return;
+    out.r.deleteContents(); out.r.insertNode(document.createTextNode(repl)); out.box.normalize();
+  }
   $('eApply').disabled = true;
   const { data, error } = await sb.rpc('ch_edit_article', { p_item_id: ART.id, p_html: out.box.innerHTML,
     p_base_version: ART.version, p_old: PENDINGSEL.quote, p_new: repl, p_ai: EDIT_AI });
   $('eApply').disabled = false;
   if (error) { badge(error.message || 'Could not save the edit.','err'); return; }
   $('eForm').hidden = true; PENDINGSEL = null; window.getSelection().removeAllRanges();
-  badge('Edit applied (version ' + data + ')','ok');
+  badge((del ? 'Passage deleted' : 'Edit applied') + ' (version ' + data + ')','ok');
   openArticle(ART.id, true);
 });
 $('artUndo').addEventListener('click', async () => {
@@ -2933,10 +2978,11 @@ function actionsMarkup(){
       + '</div>').join('') + '</div>';
 }
 
-function eventsMarkup(){
-  if (!EVENTS.length) return '<p class="empty">Nothing logged yet.</p>';
+function eventsMarkup(list, opts){
+  list = list || EVENTS; opts = opts || {};
+  if (!list.length) return '<p class="empty">Nothing logged yet.</p>';
   let last = '', out = '<div class="tlog">';
-  EVENTS.forEach(e => {
+  list.forEach(e => {
     const d = e.detail || {};
     const day = dayLabel(e.created_at);
     if (day !== last) { out += '<div class="tday">' + esc(day) + '</div>'; last = day; }
@@ -2946,14 +2992,18 @@ function eventsMarkup(){
                 : (e.kind === 'note_added' || e.kind === 'comment_added') && d.note
                   ? '<div class="quote">' + (d.quote ? '<i>“' + esc(d.quote) + '”</i><br>' : '') + esc(d.note) + '</div>'
                 : e.kind === 'article_edited' && d.new
-                  ? '<div class="quote"><s>' + esc(d.old || '') + '</s><br>' + esc(d.new) + (d.ai ? ' <i>(AI suggestion)</i>' : '') + '</div>' : '';
+                  ? '<div class="quote"><s>' + esc(d.old || '') + '</s><br>' + esc(d.new) + (d.ai ? ' <i>(AI suggestion)</i>' : '') + '</div>'
+                : e.kind === 'article_edited' && d.old
+                  ? '<div class="quote bad"><s>' + esc(d.old) + '</s></div>' : '';
+    const label = e.kind === 'article_edited' && !d.new && d.old ? 'deleted a passage from the blog'
+                : e.kind === 'article_edited' ? 'updated the blog' : (EVENT_LABEL[e.kind] || e.kind);
     const tail = e.kind === 'scheduled' && d.date ? ' for ' + ausDate(d.date)
                : (e.kind === 'article_saved' || e.kind === 'article_edited' || e.kind === 'article_restored') && d.version ? ' (version ' + d.version + ')'
                : e.kind === 'seo_check' && d.summary ? ': ' + d.summary
                : e.kind === 'pack_downloaded' && d.how ? ' (' + d.how + ')' : '';
     out += '<div class="tev"><span class="tdot" style="background:' + st.bg + '">' + (ICON[st.icon] || '') + '</span>'
-      + '<div><div class="line1"><b>' + esc(who) + '</b> ' + esc((EVENT_LABEL[e.kind] || e.kind) + tail) + '</div>'
-      + (d.title ? '<span class="item" title="' + esc(d.title) + '">' + esc(d.title) + '</span>' : '')
+      + '<div><div class="line1"><b>' + esc(who) + '</b> ' + esc(label + tail) + '</div>'
+      + (d.title && !opts.noTitle ? '<span class="item" title="' + esc(d.title) + '">' + esc(d.title) + '</span>' : '')
       + extra + '</div>'
       + '<span class="t">' + timeOnly(e.created_at) + '</span></div>';
   });
