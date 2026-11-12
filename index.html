@@ -757,16 +757,28 @@
   .htbtns .go{background:var(--accent-fill,#17B4F0);color:var(--on-accent,#fff);border-color:transparent}
   .htshow{font:inherit;font-size:13px;font-weight:600;padding:6px 14px;border-radius:99px;border:1px solid var(--line,#e2e6ec);background:#fff;color:var(--ink,#1b1d22);cursor:pointer;margin:0 0 14px}
   .artwrap{position:fixed;inset:0;background:rgba(12,20,28,.66);z-index:9100;display:flex;
-    align-items:stretch;justify-content:center;padding:18px}
+    align-items:stretch;justify-content:center;padding:10px}
   .artwrap[hidden]{display:none}
-  .artsheet{background:#fff;color:#1b2430;width:100%;min-width:0;max-width:1240px;border-radius:14px;
+  .artsheet{background:#fff;color:#1b2430;width:100%;min-width:0;max-width:none;border-radius:14px;
     display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 70px -20px rgba(0,0,0,.6)}
   .arthead{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid #e3e8ee;background:#f7f9fb}
   .arthead .t{flex:1;min-width:0;font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .arthead .hint{font-size:12.5px;color:#5d6b79}
   .artx{background:none;border:0;font-size:28px;line-height:1;cursor:pointer;color:#3c4a57;padding:0 4px}
-  .artmain{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:0}
-  .artbody{min-width:0;overflow-wrap:anywhere;overflow:auto;padding:28px clamp(16px,4vw,54px) 60px;font-size:16.5px;line-height:1.72}
+  /* Near full screen with a slide-out side panel (Jhen 12/11/2026). The panel (QC, comments, change log)
+     slides over the piece, or is pinned beside it; either way the page preview keeps its desktop layout. */
+  .artmain{flex:1;display:flex;min-height:0;position:relative;overflow:hidden}
+  .artbody{flex:1;min-width:0;overflow-wrap:anywhere;overflow:auto;padding:28px clamp(16px,4vw,54px) 60px;font-size:16.5px;line-height:1.72}
+  .artbody:not(.pgmode) > *{max-width:860px;margin-left:auto;margin-right:auto}
+  .artsidebtn{font:inherit;font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:7px;border:1px solid #cfd8e0;background:#fff;
+    color:#1b2430;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+  .artsidebtn[aria-expanded="true"]{background:var(--ink-dk,#1b2430);border-color:var(--ink-dk,#1b2430);color:#fff}
+  .artsidebtn .n{background:#e11d48;color:#fff;border-radius:99px;font-size:11px;padding:0 6px;line-height:17px}
+  .artsidebtn .n:empty{display:none}
+  .artsidehead{display:flex;align-items:center;gap:8px;margin:-4px 0 10px}
+  .artsidehead .sp{flex:1}
+  .artsidehead button{font:inherit;font-size:12px;font-weight:600;padding:4px 9px;border-radius:7px;border:1px solid #cfd8e0;background:#fff;cursor:pointer;color:#3c4a57}
+  .artsidehead button[aria-pressed="true"]{background:#eef4fb;border-color:#9cc3e6;color:#0b4f86}
   .artbody h1{font-size:30px;line-height:1.15;margin:0 0 16px}
   .artbody h2{font-size:22px;margin:30px 0 10px}
   .artbody h3{font-size:17.5px;margin:22px 0 8px}
@@ -796,6 +808,9 @@
   .pgframe{container-type:inline-size;max-width:1120px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;
     box-shadow:0 18px 50px -24px rgba(10,20,30,.45);border:1px solid #d5dde5}
   .artbody.pgmob .pgframe{max-width:390px;border-radius:26px;border:8px solid #1b1d22}
+  /* Desktop preview is laid out at 1280px, a real desktop, and scaled down to the space it has (artFit),
+     so a narrower pop-up or a pinned side panel shrinks the view, never the site's layout. */
+  .artbody.pgmode:not(.pgmob) .pgframe.fitted{width:1280px;max-width:none;transform-origin:top left;margin:0}
   .pgbar{display:flex;align-items:center;gap:10px;padding:9px 14px;background:#f1f3f5;border-bottom:1px solid #dde3e9;font-size:12.5px;color:#4b5866}
   .pgbar .dots{display:flex;gap:6px}.pgbar .dots i{width:10px;height:10px;border-radius:50%;background:#d0d6dc;display:block}
   .pgbar .url{flex:1;min-width:0;background:#fff;border:1px solid #dde3e9;border-radius:999px;padding:4px 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -858,7 +873,12 @@
     .pgframe .pg-ctas .pg-btn{flex:1;text-align:center}
     .pgframe .pg-trust ul{justify-content:flex-start;flex-direction:column}
   }
-  .artside{border-left:1px solid #e3e8ee;background:#fafbfc;overflow:auto;padding:14px}
+  .artside{position:absolute;top:0;right:0;bottom:0;width:380px;max-width:92%;z-index:6;border-left:1px solid #e3e8ee;
+    background:#fafbfc;overflow:auto;padding:14px;box-shadow:-18px 0 40px -24px rgba(10,20,30,.45);
+    transform:translateX(102%);visibility:hidden;transition:transform .22s ease,visibility 0s linear .22s}
+  .artmain.side-open .artside{transform:none;visibility:visible;transition:transform .22s ease}
+  .artmain.side-pinned .artside{position:relative;flex:0 0 380px;max-width:none;transform:none;visibility:visible;box-shadow:none;transition:none}
+  @media (prefers-reduced-motion:reduce){.artside,.artmain.side-open .artside{transition:none}}
   .artqc{margin:0 0 16px}
   .artqc .qcrow{margin-top:0;padding:10px 12px}
   .artqc .qcrow .qcbtns{flex-wrap:wrap}
@@ -919,10 +939,10 @@
   @media screen and (max-width:860px){
     .artwrap{padding:0}
     .artsheet{border-radius:0}
-    .artmain{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
     .artbody table{display:block;overflow-x:auto}
     .artbody h1{font-size:24px}
-    .artside{border-left:0;border-top:1px solid #e3e8ee;max-height:38vh}
+    .artmain.side-pinned .artside{position:absolute;flex:none;width:100%;max-width:100%}
+    .artsidehead [data-artpin]{display:none}
     .arthead .hint{display:none}
   }
 
@@ -1868,10 +1888,14 @@
       <span class="hint">Highlight any text to leave a comment</span>
       <span class="artdev" id="artDev" hidden><button type="button" data-dev="d" class="on">Desktop</button><button type="button" data-dev="m">Mobile</button></span>
       <button class="artundo" type="button" id="artUndo" hidden>Undo last edit</button>
+      <button class="artsidebtn" type="button" id="artSideBtn" aria-expanded="false" aria-controls="artSide">Comments <span class="n" id="artSideN"></span></button>
       <button class="artx" type="button" id="artClose" aria-label="Close">&times;</button></div>
     <div class="artmain">
       <article class="artbody" id="artBody"></article>
-      <aside class="artside"><section class="artqc" id="artQC" hidden></section><h4>Comments</h4>
+      <aside class="artside" id="artSide"><div class="artsidehead"><span class="sp"></span>
+        <button type="button" data-artpin aria-pressed="false" title="Keep this panel open beside the piece">Pin open</button>
+        <button type="button" data-artsideclose aria-label="Hide the side panel">Hide</button></div>
+        <section class="artqc" id="artQC" hidden></section><h4>Comments</h4>
         <label class="showres"><input type="checkbox" id="artShowRes"> Show resolved</label>
         <div id="artComments"></div>
         <section class="artlog" id="artLog" hidden><h4>Change log <span class="adm-only">Admins only</span></h4>
@@ -2214,6 +2238,8 @@ async function openArticle(itemId, keepScroll){
     x.innerHTML = '<iframe loading="lazy" title="Map" src="https://maps.google.com/maps?q='
       + encodeURIComponent(x.dataset.q) + '&output=embed"></iframe>'; });
   $('artModal').hidden = false; document.body.style.overflow = 'hidden';
+  artSide(false); artFit();
+  $('artBody').querySelectorAll('img').forEach(i => { if (!i.complete) i.addEventListener('load', artFit, { once: true }); });
   $('artBody').scrollTop = prevScroll;
   $('artUndo').hidden = true;
   if (ME.kind === 'internal') {
@@ -2763,7 +2789,62 @@ function pagePreviewHtml(r, html){
 document.querySelectorAll('#artDev [data-dev]').forEach(b => b.addEventListener('click', () => {
   document.querySelectorAll('#artDev [data-dev]').forEach(x => x.classList.toggle('on', x === b));
   $('artBody').classList.toggle('pgmob', b.dataset.dev === 'm');
+  artFit();
 }));
+
+/* Desktop page preview at a real desktop width (Jhen 12/11/2026). The frame is laid out at 1280px and
+   scaled to the width it has, so the site's own menu and columns never wrap the way a narrow box makes them. */
+const ART_DESK = 1280;
+function artFit(){
+  const body = $('artBody'), fr = body && body.querySelector('.pgframe');
+  if (!fr) return;
+  const on = body.classList.contains('pgmode') && !body.classList.contains('pgmob');
+  fr.classList.toggle('fitted', on);
+  if (!on) { fr.style.transform = ''; fr.style.marginLeft = ''; fr.style.marginBottom = ''; return; }
+  const cs = getComputedStyle(body);
+  const avail = body.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const k = Math.min(1, avail / ART_DESK);
+  fr.style.transform = k < 1 ? 'scale(' + k.toFixed(4) + ')' : '';
+  fr.style.marginLeft = Math.max(0, (avail - ART_DESK * k) / 2) + 'px';
+  fr.style.marginBottom = (-(fr.offsetHeight * (1 - k))) + 'px';
+}
+if (window.ResizeObserver) {
+  const ro = new ResizeObserver(() => { if (!$('artModal').hidden) artFit(); });
+  ro.observe($('artBody'));
+  new MutationObserver(() => { const fr = $('artBody').querySelector('.pgframe'); if (fr && !fr._ro) { fr._ro = 1; ro.observe(fr); } })
+    .observe($('artBody'), { childList: true });
+}
+addEventListener('resize', () => { if (!$('artModal').hidden) artFit(); });
+
+/* Side panel (QC, comments, change log): slides out over the piece, or pinned beside it. Pinned is
+   remembered on this computer. Leaving a comment opens it so the new comment is seen. */
+let ART_PIN = false;
+try { ART_PIN = localStorage.getItem('hub-art-side-pin') === '1'; } catch (e) {}
+function artSide(open){
+  const m = document.querySelector('.artmain');
+  m.classList.toggle('side-pinned', ART_PIN);
+  m.classList.toggle('side-open', !ART_PIN && !!open);
+  const shown = ART_PIN || !!open;
+  $('artSideBtn').setAttribute('aria-expanded', shown ? 'true' : 'false');
+  document.querySelectorAll('[data-artpin]').forEach(b => { b.setAttribute('aria-pressed', ART_PIN ? 'true' : 'false'); b.textContent = ART_PIN ? 'Unpin' : 'Pin open'; });
+  setTimeout(artFit, 240); artFit();
+}
+$('artSideBtn').addEventListener('click', () => {
+  if (ART_PIN) { ART_PIN = false; try { localStorage.setItem('hub-art-side-pin', '0'); } catch (e) {} artSide(false); return; }
+  artSide(!document.querySelector('.artmain').classList.contains('side-open'));
+});
+document.querySelectorAll('[data-artpin]').forEach(b => b.addEventListener('click', () => {
+  ART_PIN = !ART_PIN; try { localStorage.setItem('hub-art-side-pin', ART_PIN ? '1' : '0'); } catch (e) {}
+  artSide(true);
+}));
+document.querySelectorAll('[data-artsideclose]').forEach(b => b.addEventListener('click', () => {
+  if (ART_PIN) { ART_PIN = false; try { localStorage.setItem('hub-art-side-pin', '0'); } catch (e) {} }
+  artSide(false);
+}));
+function artSideCount(){
+  const n = (ARTCOMMENTS || []).filter(c => c.status === 'open').length;
+  $('artSideN').textContent = n ? String(n) : '';
+}
 
 function closeArticle(){
   const qcId = ART ? ART.id : null;
@@ -2789,7 +2870,7 @@ async function loadComments(){
   if (error) { badge('Could not load comments.','err'); return; }
   ARTCOMMENTS = data || [];
   OPENCOMMENTS[ART.id] = ARTCOMMENTS.filter(c => c.status === 'open').length;
-  paintMarks(); paintComments();
+  paintMarks(); paintComments(); artSideCount();
 }
 
 /* Text-node walk with running offsets, so a quote can be found and wrapped even when
@@ -2946,6 +3027,7 @@ $('cSave').addEventListener('click', async () => {
   $('cSave').disabled = false;
   if (error) { badge('Could not save the comment.','err'); return; }
   $('cForm').hidden = true; PENDINGSEL = null; window.getSelection().removeAllRanges();
+  if (!ART_PIN) artSide(true);
   badge('Comment saved','ok'); loadComments();
 });
 /* ---------- Suggest edit (R2R staff only) ----------
@@ -3633,7 +3715,7 @@ const HT_STEPS = {
   tickets: [],
   reader: [
     { el:() => $('artBody'), t:'Highlight to comment', p:'Select any words in the piece and a Comment button appears. Write what you would like changed and save it.' },
-    { el:() => document.querySelector('.artside'), t:'Your comments', p:'Everything you have said on this piece is listed here, and we work through it.' },
+    { el:() => $('artSideBtn'), t:'Your comments', p:'Press Comments to open everything you have said on this piece. We work through every one. Pin it open if you like it beside the piece.' },
     { el:() => $('artClose'), t:'When you are finished', p:'Close this, then tick Approve content on the card if you are happy, or Not approved if you want changes.' },
   ],
 };
