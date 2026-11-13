@@ -6229,9 +6229,9 @@ function rejBox(r){
 }
 
 function itemCard(r, staff){
-  // One-off (Jhen 16/10/2026): pages never show article buttons. The writer drafted two October pages by mistake on 15/10;
+  // One-off (Jhen 16/10/2026, narrowed 13/11/2026): October and earlier pages never show article buttons; page-writer pages from November on do. The writer drafted two October pages by mistake on 15/10;
   // those drafts stay stored, but the cards show View page only, like every other page.
-  const art = isPage(r) ? null : ARTICLES[r.id];
+  const art = (isPage(r) && String(r.month_key || '') < '2026-11') ? null : ARTICLES[r.id];
   const id = esc(r.id), st = esc(r.client_status), fs = esc(r.funnel_stage || '');
   if (!staff && CFG.oneStage) return clientCard(r);
   // Written content can only be approved once it exists AND its topic was approved.
