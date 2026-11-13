@@ -154,3 +154,8 @@
 .pgframe .gsf-cols{grid-template-columns:1fr;gap:32px}
 .pgframe .gsf-bar{flex-direction:column}
 .pgframe .gsf-sticky{display:flex;align-items:center;justify-content:center;gap:8px;margin:20px -16px -20px;background:#ff6b2c;color:#fff;font-size:17px;font-weight:700;padding:14px 16px}}
+
+/* Hub preview fix 13/11/2026: the hub's generic .pg-hero rules (max-width 720px, padding) squeezed the GSK hero */
+.pgframe .pg-hero.gs-hero{padding:0;background:#091225;color:#fff}
+.pgframe .pg-hero.gs-hero>*{max-width:none}
+.pgframe .pg-hero.gs-hero>.gs-bg{position:absolute}
